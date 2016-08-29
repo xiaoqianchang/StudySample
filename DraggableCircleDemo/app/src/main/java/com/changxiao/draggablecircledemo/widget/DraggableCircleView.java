@@ -47,6 +47,9 @@ public class DraggableCircleView extends View {
     private static final int DEFAULT_TIMER_COLON_COLOR = 0x80FA7777;
     private static final int DEFAULT_TIMER_TEXT_COLOR = 0x99000000;
 
+    private static final int DEFAULT_SMALL_TICK_MARK_NUM = 120;
+    private static final int DEFAULT_BIG_TICK_MARK_NUM = 4;
+
     // Paint
     private Paint mCirclePaint;
     private Paint mHighlightLinePaint;
@@ -91,6 +94,8 @@ public class DraggableCircleView extends View {
 
     // control
     private boolean mIsRepeatRound = true; //是否可重复旋转
+    private int mSmallTickMarkNum; // 小刻度线数
+    private int mBigTickMarkNum; // 大刻度线数
 
     public DraggableCircleView(Context context) {
         this(context, null);
@@ -129,6 +134,10 @@ public class DraggableCircleView extends View {
         mNumberColor = DEFAULT_NUMBER_COLOR;
         mTimerNumberColor = DEFAULT_TIMER_NUMBER_COLOR;
         mTimerTextColor = DEFAULT_TIMER_TEXT_COLOR;
+
+        // Set default data
+        mSmallTickMarkNum = DEFAULT_SMALL_TICK_MARK_NUM;
+        mBigTickMarkNum = DEFAULT_BIG_TICK_MARK_NUM;
 
         // Init all paints
         mCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -213,12 +222,16 @@ public class DraggableCircleView extends View {
         // Content
         canvas.drawCircle(mCx, mCy, mRadius, mCirclePaint);
         // Scale line
+        int interevalNum = 1;
+        if (mSmallTickMarkNum % mBigTickMarkNum == 0) {
+            interevalNum = mSmallTickMarkNum / mBigTickMarkNum;
+        }
         canvas.save();
-        for (int i = 0; i < 120; i++) {
+        for (int i = 0; i < mSmallTickMarkNum; i++) {
             canvas.save();
-            canvas.rotate(360 / 120 * i, mCx, mCy);
-            if (i % 30 == 0) {
-                if (360 / 120 * i <= Math.toDegrees(mCurrentRadian)) {
+            canvas.rotate(360 / mSmallTickMarkNum * i, mCx, mCy);
+            if (i % interevalNum == 0) {
+                if (360 / mSmallTickMarkNum * i <= Math.toDegrees(mCurrentRadian)) {
                     canvas.drawLine(mCx, getMeasuredHeight() / 2 - mRadius + mCircleStrokeWidth / 2 + mGapBetweenCircleAndLine, mCx, getMeasuredHeight() / 2 - mRadius + mCircleStrokeWidth / 2 + mGapBetweenCircleAndLine +
                             mLongerLineLength, mHighlightLinePaint);
                 } else {
@@ -226,7 +239,7 @@ public class DraggableCircleView extends View {
                             mLongerLineLength, mLinePaint);
                 }
             } else {
-                if (360 / 120 * i <= Math.toDegrees(mCurrentRadian)) {
+                if (360 / mSmallTickMarkNum * i <= Math.toDegrees(mCurrentRadian)) {
                     canvas.drawLine(mCx, getMeasuredHeight() / 2 - mRadius + mCircleStrokeWidth / 2 + mGapBetweenCircleAndLine, mCx, getMeasuredHeight() / 2 - mRadius + mCircleStrokeWidth / 2 + mGapBetweenCircleAndLine + mLineLength, mHighlightLinePaint);
                 } else {
                     canvas.drawLine(mCx, getMeasuredHeight() / 2 - mRadius + mCircleStrokeWidth / 2 + mGapBetweenCircleAndLine, mCx, getMeasuredHeight() / 2 - mRadius + mCircleStrokeWidth / 2 + mGapBetweenCircleAndLine + mLineLength, mLinePaint);
@@ -379,5 +392,23 @@ public class DraggableCircleView extends View {
         animation.setDuration(3000);
         animation.setInterpolator(interpolator);
         animation.start();
+    }
+
+    /**
+     * 设置小可都总数(平均分为多少份)
+     *
+     * @param bigTickMarkNum
+     */
+    public void setBigTickMarkNum(int bigTickMarkNum) {
+        this.mBigTickMarkNum = bigTickMarkNum;
+    }
+
+    /**
+     * 设置大刻度数
+     *
+     * @param smallTickMarkNum
+     */
+    public void setSmallTickMarkNum(int smallTickMarkNum) {
+        this.mSmallTickMarkNum = smallTickMarkNum;
     }
 }
