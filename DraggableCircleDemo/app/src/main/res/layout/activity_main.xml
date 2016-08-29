@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context="com.changxiao.draggablecircledemo.MainActivity">
+
+    <Button
+        android:id="@+id/btn_circles_drawing_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CirclesDrawingView"
+        android:textColor="@android:color/black"/>
+
+    <Button
+        android:id="@+id/btn_draw_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DrawView"
+        android:textColor="@android:color/black"/>
+
+    <Button
+        android:id="@+id/btn_circle_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CircleBar"
+        android:textColor="@android:color/black"/>
+
+    <Button
+        android:id="@+id/btn_circle_timer_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CircleTimerView"
+        android:textColor="@android:color/black"
+        android:visibility="gone"/>
+
+    <com.changxiao.draggablecircledemo.widget.DraggableCircleView
+        android:id="@+id/draggable_circle_view"
+        android:layout_width="300dp"
+        android:layout_height="300dp"/>
+
+</LinearLayout>
