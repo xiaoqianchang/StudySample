@@ -47,8 +47,8 @@ public class DraggableCircleView extends View {
     private static final int DEFAULT_TIMER_COLON_COLOR = 0x80FA7777;
     private static final int DEFAULT_TIMER_TEXT_COLOR = 0x99000000;
 
-    private static final int DEFAULT_SMALL_TICK_MARK_NUM = 120;
-    private static final int DEFAULT_BIG_TICK_MARK_NUM = 4;
+    private static final int DEFAULT_SMALL_TICK_MARK_NUM = 10;
+    private static final int DEFAULT_BIG_TICK_MARK_NUM = 0;
 
     // Paint
     private Paint mCirclePaint;
@@ -89,13 +89,16 @@ public class DraggableCircleView extends View {
     private float mCurrentRadian; // 当前弧度
     private float mPreRadian;
     private boolean mInCircleButton;
-    private int mCurrentTime; // seconds
+    private int mCurrentMoney; // seconds
     private String mHintText;
 
     // control
     private boolean mIsRepeatRound = true; //是否可重复旋转
     private int mSmallTickMarkNum; // 小刻度线数
     private int mBigTickMarkNum; // 大刻度线数
+    private boolean mHasBigTickMark; // 是否有大刻度线
+    private int[] mEachCircleTotal = new int[] {10, 20}; // 一圈的总金额
+    private int currentCircle = 0; // 当前是第几圈
 
     public DraggableCircleView(Context context) {
         this(context, null);
@@ -218,27 +221,33 @@ public class DraggableCircleView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        Log.d(TAG, "onDraw");
+//        Log.d(TAG, "onDraw");
         // Content
         canvas.drawCircle(mCx, mCy, mRadius, mCirclePaint);
         // Scale line
-        int interevalNum = 1;
-        if (mSmallTickMarkNum % mBigTickMarkNum == 0) {
-            interevalNum = mSmallTickMarkNum / mBigTickMarkNum;
+        int interevalNum = 1; // 两个大刻度间隔的小刻度数
+        if (mBigTickMarkNum > 0) {
+            mHasBigTickMark = true;
+            if (mSmallTickMarkNum % mBigTickMarkNum == 0) {
+                interevalNum = mSmallTickMarkNum / mBigTickMarkNum;
+            }
+        } else {
+            mHasBigTickMark = false;
+            interevalNum = mSmallTickMarkNum;
         }
         canvas.save();
         for (int i = 0; i < mSmallTickMarkNum; i++) {
             canvas.save();
             canvas.rotate(360 / mSmallTickMarkNum * i, mCx, mCy);
-            if (i % interevalNum == 0) {
-                if (360 / mSmallTickMarkNum * i <= Math.toDegrees(mCurrentRadian)) {
+            if (mHasBigTickMark && i % interevalNum == 0) { // 长刻度线
+                if (360 / mSmallTickMarkNum * i <= Math.toDegrees(mCurrentRadian)) { // 小球之前高亮mHighlightLinePaint
                     canvas.drawLine(mCx, getMeasuredHeight() / 2 - mRadius + mCircleStrokeWidth / 2 + mGapBetweenCircleAndLine, mCx, getMeasuredHeight() / 2 - mRadius + mCircleStrokeWidth / 2 + mGapBetweenCircleAndLine +
                             mLongerLineLength, mHighlightLinePaint);
-                } else {
+                } else { // 小球之后正常mLinePaint
                     canvas.drawLine(mCx, getMeasuredHeight() / 2 - mRadius + mCircleStrokeWidth / 2 + mGapBetweenCircleAndLine, mCx, getMeasuredHeight() / 2 - mRadius + mCircleStrokeWidth / 2 + mGapBetweenCircleAndLine +
                             mLongerLineLength, mLinePaint);
                 }
-            } else {
+            } else { // 短刻度线
                 if (360 / mSmallTickMarkNum * i <= Math.toDegrees(mCurrentRadian)) {
                     canvas.drawLine(mCx, getMeasuredHeight() / 2 - mRadius + mCircleStrokeWidth / 2 + mGapBetweenCircleAndLine, mCx, getMeasuredHeight() / 2 - mRadius + mCircleStrokeWidth / 2 + mGapBetweenCircleAndLine + mLineLength, mHighlightLinePaint);
                 } else {
@@ -249,7 +258,7 @@ public class DraggableCircleView extends View {
         }
         canvas.restore();
         // Number it is rubbish code
-        float textLength = mNumberPaint.measureText("15");
+        /*float textLength = mNumberPaint.measureText("15");
         canvas.drawText("60", mCx, getMeasuredHeight() / 2 - mRadius + mCircleStrokeWidth / 2 + mGapBetweenCircleAndLine +
                 mLongerLineLength + mGapBetweenNumberAndLine + getFontHeight(mNumberPaint), mNumberPaint);
         canvas.drawText("15", mCx + mRadius - mCircleStrokeWidth / 2 - mGapBetweenCircleAndLine - mLongerLineLength -
@@ -257,7 +266,7 @@ public class DraggableCircleView extends View {
         canvas.drawText("30", mCx, getMeasuredHeight() / 2 + mRadius - mCircleStrokeWidth / 2 - mGapBetweenCircleAndLine -
                 mLongerLineLength - mGapBetweenNumberAndLine, mNumberPaint);
         canvas.drawText("45", getMeasuredHeight() / 2 - mRadius + mCircleStrokeWidth / 2 + mGapBetweenCircleAndLine +
-                mLongerLineLength + mGapBetweenNumberAndLine + textLength / 2, mCy + getFontHeight(mNumberPaint) / 2, mNumberPaint);
+                mLongerLineLength + mGapBetweenNumberAndLine + textLength / 2, mCy + getFontHeight(mNumberPaint) / 2, mNumberPaint);*/
         // Circle button
         canvas.save();
         canvas.rotate((float) Math.toDegrees(mCurrentRadian), mCx, mCy);
@@ -266,8 +275,7 @@ public class DraggableCircleView extends View {
         canvas.restore();
         // TimerNumber
         canvas.save();
-        canvas.drawText((mCurrentTime / 60 < 10 ? "0" + mCurrentTime / 60 : mCurrentTime / 60) + " " + (mCurrentTime % 60 < 10 ? "0" + mCurrentTime % 60 : mCurrentTime % 60), mCx, mCy + getFontHeight(mTimerNumberPaint) / 2, mTimerNumberPaint);
-        canvas.drawText(":", mCx, mCy + getFontHeight(mTimerNumberPaint) / 2, mTimerColonPaint);
+        canvas.drawText(String.valueOf(mCurrentMoney), mCx, mCy + getFontHeight(mTimerNumberPaint) / 2, mTimerNumberPaint);
         canvas.restore();
         // Timer Text
         canvas.save();
@@ -276,8 +284,6 @@ public class DraggableCircleView extends View {
     }
 
     private float getFontHeight(Paint paint) {
-        // FontMetrics sF = paint.getFontMetrics();
-        // return sF.descent - sF.ascent;
         Rect rect = new Rect();
         paint.getTextBounds("1", 0, 1, rect);
         return rect.height();
@@ -300,8 +306,14 @@ public class DraggableCircleView extends View {
                     // 处理2 * Math.PI零界点
                     if (mPreRadian > Math.toRadians(270) && temp < Math.toRadians(90)) { // 顺时针穿过零界点
                         mPreRadian -= 2 * Math.PI;
+//                        Log.i(TAG, "顺时针mPreRadian: " +mPreRadian);
+                        currentCircle ++;
                     } else if (mPreRadian < Math.toRadians(90) && temp > Math.toRadians(270)) { // 逆时针穿过零界点
                         mPreRadian = (float) (temp + (temp - 2 * Math.PI) - mPreRadian);
+//                        Log.i(TAG, "逆时针mPreRadian: " +mPreRadian);
+                        if (currentCircle != 0) {
+                            currentCircle --;
+                        }
                     }
                     mCurrentRadian += (temp - mPreRadian);
                     mPreRadian = temp;
@@ -318,7 +330,25 @@ public class DraggableCircleView extends View {
                     }
 //                    if (mCircleTimerListener != null)
 //                        mCircleTimerListener.onTimerSetValueChange(getCurrentTime());
-                    mCurrentTime = (int) (60 / (2 * Math.PI) * mCurrentRadian * 60);
+                    // 滚动计算当前金钱
+//                    Log.i(TAG, "当前第"+ currentCircle +"圈");
+                    int beforeSum = 0;
+                    if (currentCircle == 0) {
+                        mCurrentMoney = (int) (mEachCircleTotal[currentCircle] / (2 * Math.PI) * mCurrentRadian);
+                    } else if (currentCircle > 0 && currentCircle < mEachCircleTotal.length)  {
+                        for (int cur = 0; cur < currentCircle; cur++) {
+                            beforeSum += mEachCircleTotal[cur];
+                        }
+                        int tempMoney = (int) (mEachCircleTotal[mEachCircleTotal.length - 1] / (2 * Math.PI) * temp);
+                        mCurrentMoney = beforeSum + tempMoney;
+                    } else {
+                        // 当目前圈数大于给定数组的大小
+                        for (int cur = 0; cur < mEachCircleTotal.length; cur++) {
+                            beforeSum += mEachCircleTotal[cur];
+                        }
+                        int tempMoney = (int) (mEachCircleTotal[mEachCircleTotal.length - 1] / (2 * Math.PI) * (mCurrentRadian - (2 * Math.PI) * mEachCircleTotal.length));
+                        mCurrentMoney = beforeSum + tempMoney;
+                    }
                     invalidate();
                 }
                 break;
@@ -395,7 +425,7 @@ public class DraggableCircleView extends View {
     }
 
     /**
-     * 设置小可都总数(平均分为多少份)
+     * 设置小刻度总数(平均分为多少份)
      *
      * @param bigTickMarkNum
      */
@@ -410,5 +440,14 @@ public class DraggableCircleView extends View {
      */
     public void setSmallTickMarkNum(int smallTickMarkNum) {
         this.mSmallTickMarkNum = smallTickMarkNum;
+    }
+
+    /**
+     * 当前圈的总金额
+     *
+     * @param eachCircleTotal
+     */
+    public void setEachCircleTotal(int[] eachCircleTotal) {
+        this.mEachCircleTotal = eachCircleTotal;
     }
 }
