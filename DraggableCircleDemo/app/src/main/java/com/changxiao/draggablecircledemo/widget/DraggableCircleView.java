@@ -279,7 +279,7 @@ public class DraggableCircleView extends View {
         canvas.restore();
         // Timer Text
         canvas.save();
-        canvas.drawText(mHintText, mCx, mCy + getFontHeight(mTimerNumberPaint) / 2 + mGapBetweenTimerNumberAndText + getFontHeight(mTimerTextPaint) / 2, mTimerTextPaint);
+        canvas.drawText(/*mHintText*/"第" + currentCircle + "圈", mCx, mCy + getFontHeight(mTimerNumberPaint) / 2 + mGapBetweenTimerNumberAndText + getFontHeight(mTimerTextPaint) / 2, mTimerTextPaint);
         canvas.restore();
     }
 
@@ -339,7 +339,7 @@ public class DraggableCircleView extends View {
                         for (int cur = 0; cur < currentCircle; cur++) {
                             beforeSum += mEachCircleTotal[cur];
                         }
-                        int tempMoney = (int) (mEachCircleTotal[mEachCircleTotal.length - 1] / (2 * Math.PI) * temp);
+                        int tempMoney = (int) (mEachCircleTotal[currentCircle] / (2 * Math.PI) * temp);
                         mCurrentMoney = beforeSum + tempMoney;
                     } else {
                         // 当目前圈数大于给定数组的大小
@@ -368,6 +368,36 @@ public class DraggableCircleView extends View {
                 break;
         }
         return true;
+    }
+
+    private void calculateMoney(float mCurrentRadian, float temp) {
+        /*if (mEachCircleTotal.length == 0) {
+            mCurrentMoney = (int) (mEachCircleTotal[0] / (2 * Math.PI) * mCurrentRadian);
+            return;
+        }
+        if (temp == 0) {
+            return;
+        }
+        for (int i = 0; i < mEachCircleTotal.length; i++) {
+            if (mCurrentRadian >= i  * 2 * Math.PI && mCurrentRadian < (i + 1) * 2 * Math.PI) {
+                int tempS = 0;
+                for (int j = 0; j < i; j++) {
+                    tempS += mEachCircleTotal[j];
+                }
+                mCurrentMoney = tempS + (int) (mEachCircleTotal[i] / (2 * Math.PI) * temp);
+                break;
+            }
+        }*/
+        if (mCurrentRadian >= 0 && mCurrentRadian < 2 * Math.PI) {
+            Log.i(TAG, "当前第"+ 0 +"圈" + " mCurrentMoney=" + mCurrentMoney + " mCurrentRadian=" + mCurrentRadian + " temp=" + temp);
+            mCurrentMoney = (int) (mEachCircleTotal[0] / (2 * Math.PI) * temp);
+        } else if (mCurrentRadian >= 2*Math.PI && mCurrentRadian < 4 * Math.PI) {
+            Log.i(TAG, "当前第"+ 1 +"圈" + " mCurrentMoney=" + mCurrentMoney + " mCurrentRadian=" + mCurrentRadian + " temp=" + temp);
+            mCurrentMoney = mEachCircleTotal[0] + (int) (mEachCircleTotal[1] / (2 * Math.PI) * temp);
+        } else if (mCurrentRadian >= 4*Math.PI && mCurrentRadian < 6 * Math.PI) {
+            Log.i(TAG, "当前第"+ 2 +"圈" + " mCurrentMoney=" + mCurrentMoney + " mCurrentRadian=" + mCurrentRadian + " temp=" + temp);
+            mCurrentMoney = mEachCircleTotal[0] + mEachCircleTotal[1] + (int) (mEachCircleTotal[2] / (2 * Math.PI) * temp);
+        }
     }
 
     /**
