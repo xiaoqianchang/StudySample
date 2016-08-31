@@ -24,7 +24,8 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         mDraggableCircleView.setSmallTickMarkNum(10);
-        mDraggableCircleView.setEachCircleTotal(new int[] {10, 20, 50, 100, 300});
+        mDraggableCircleView.setEachCircleTotal(new int[] {10, 20, 50, 100});
+        mDraggableCircleView.setCurrentValue(200);
     }
 
     @OnClick({R.id.btn_circles_drawing_view, R.id.btn_draw_view, R.id.btn_circle_bar, R.id.btn_circle_timer_view})
