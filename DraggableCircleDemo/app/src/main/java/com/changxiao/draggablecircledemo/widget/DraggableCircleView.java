@@ -13,9 +13,7 @@ import android.view.View;
 import android.view.animation.AnticipateOvershootInterpolator;
 import android.view.animation.Interpolator;
 
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 
 /**
  * 可绕圆圈轨迹拖拽的view
