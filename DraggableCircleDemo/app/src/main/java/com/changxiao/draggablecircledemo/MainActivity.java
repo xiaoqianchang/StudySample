@@ -1,6 +1,7 @@
 package com.changxiao.draggablecircledemo;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -23,9 +24,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        mDraggableCircleView.setSmallTickMarkNum(10);
-        mDraggableCircleView.setEachCircleTotal(new int[] {10, 20, 50, 100});
-        mDraggableCircleView.setCurrentValue(200);
+        mDraggableCircleView.newBuilder()
+                .setSmallTickMarkNum(360)
+                .setEachCircleTotal(new double[] {1000 * 360, 10000 * 360})
+                .setCurrentValue(0)
+                .setCircleButtonColor(Color.RED)
+                .setMiddleValueSize(getResources().getDimensionPixelSize(R.dimen.middle_value_size))
+                .setMiddleTextSize(getResources().getDimensionPixelSize(R.dimen.middle_text_size))
+                .build();
     }
 
     @OnClick({R.id.btn_circles_drawing_view, R.id.btn_draw_view, R.id.btn_circle_bar, R.id.btn_circle_timer_view})

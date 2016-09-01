@@ -39,7 +39,7 @@
 
     <com.changxiao.draggablecircledemo.widget.DraggableCircleView
         android:id="@+id/draggable_circle_view"
-        android:layout_width="300dp"
-        android:layout_height="300dp"/>
+        android:layout_width="200dp"
+        android:layout_height="200dp"/>
 
 </LinearLayout>
