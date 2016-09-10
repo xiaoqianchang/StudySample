@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.changxiao.draggablecircledemo.widget.DraggableCircleView;
+import com.changxiao.draggablecircledemo.widget.DraggableCircleViewTwo;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -16,7 +17,7 @@ import butterknife.OnClick;
 public class MainActivity extends AppCompatActivity {
 
     @Bind(R.id.draggable_circle_view)
-    DraggableCircleView mDraggableCircleView;
+    DraggableCircleViewTwo mDraggableCircleView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

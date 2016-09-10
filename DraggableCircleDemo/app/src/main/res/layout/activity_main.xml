@@ -37,7 +37,7 @@
         android:textColor="@android:color/black"
         android:visibility="gone"/>
 
-    <com.changxiao.draggablecircledemo.widget.DraggableCircleView
+    <com.changxiao.draggablecircledemo.widget.DraggableCircleViewTwo
         android:id="@+id/draggable_circle_view"
         android:layout_width="200dp"
         android:layout_height="200dp"/>
