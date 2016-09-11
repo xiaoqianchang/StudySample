@@ -42,4 +42,9 @@
         android:layout_width="200dp"
         android:layout_height="200dp"/>
 
+    <com.changxiao.draggablecircledemo.widget.DraggableCircleViewTwo
+        android:id="@+id/draggable_circle_view_date"
+        android:layout_width="200dp"
+        android:layout_height="200dp"/>
+
 </LinearLayout>

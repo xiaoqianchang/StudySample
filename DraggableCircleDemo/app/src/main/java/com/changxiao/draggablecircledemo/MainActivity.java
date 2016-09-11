@@ -19,6 +19,9 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.draggable_circle_view)
     DraggableCircleViewTwo mDraggableCircleView;
 
+    @Bind(R.id.draggable_circle_view_date)
+    DraggableCircleViewTwo mDraggableCircleViewDate;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,12 +29,39 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         mDraggableCircleView.newBuilder()
-                .setSmallTickMarkNum(360)
+                .setSmallTickMarkNum(10)
                 .setEachCircleTotal(new double[] {1000 * 360, 10000 * 360})
                 .setCurrentValue(0)
-                .setCircleButtonColor(Color.RED)
+//                .setCircleButtonColor(Color.WHITE)
                 .setMiddleValueSize(getResources().getDimensionPixelSize(R.dimen.middle_value_size))
                 .setMiddleTextSize(getResources().getDimensionPixelSize(R.dimen.middle_text_size))
+//                .setCircleColor(Color.RED)
+//                .setCircleRingColor(Color.RED)
+//                .setInnerCircleColor(Color.BLACK)
+                .setGapBetweenCircleAndLine(getResources().getDimension(R.dimen.padding_2))
+                .setLineLength(getResources().getDimension(R.dimen.padding_7))
+//                .setCircleRingStrokeWidth((int) getResources().getDimension(R.dimen.padding_22))
+                .setMiddleText("目标金额")
+                .setMiddleTextSize(getResources().getDimension(R.dimen.font_32))
+                .setMiddleValueSize(getResources().getDimension(R.dimen.font_38))
+                .build();
+
+        mDraggableCircleViewDate.newBuilder()
+                .setSmallTickMarkNum(6)
+                .setEachCircleTotal(new double[] {12})
+                .setCurrentValue(0)
+                //                .setCircleButtonColor(Color.WHITE)
+                .setMiddleValueSize(getResources().getDimensionPixelSize(R.dimen.middle_value_size))
+                .setMiddleTextSize(getResources().getDimensionPixelSize(R.dimen.middle_text_size))
+                //                .setCircleColor(Color.RED)
+                //                .setCircleRingColor(Color.RED)
+                //                .setInnerCircleColor(Color.BLACK)
+                .setGapBetweenCircleAndLine(getResources().getDimension(R.dimen.padding_2))
+                .setLineLength(getResources().getDimension(R.dimen.padding_7))
+                //                .setCircleRingStrokeWidth((int) getResources().getDimension(R.dimen.padding_22))
+                .setMiddleText("达成日期")
+                .setMiddleTextSize(getResources().getDimension(R.dimen.font_32))
+                .setMiddleValueSize(getResources().getDimension(R.dimen.font_38))
                 .build();
     }
 

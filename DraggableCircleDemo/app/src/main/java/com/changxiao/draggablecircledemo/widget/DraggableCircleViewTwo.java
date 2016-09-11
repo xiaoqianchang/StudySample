@@ -3,6 +3,7 @@ package com.changxiao.draggablecircledemo.widget;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
@@ -34,32 +35,36 @@ public class DraggableCircleViewTwo extends View {
     private final String TAG = DraggableCircleViewTwo.class.getSimpleName();
 
     // Default dimension in dp/pt
-    private static final float DEFAULT_GAP_BETWEEN_CIRCLE_AND_LINE = 5;
+    private static final float DEFAULT_GAP_BETWEEN_CIRCLE_AND_LINE = 0;
     private static final float DEFAULT_GAP_BETWEEN_NUMBER_AND_LINE = 5;
     private static final float DEFAULT_TICK_MARK_VALUE_SIZE = 10;
     private static final float DEFAULT_LINE_LENGTH = 14;
     private static final float DEFAULT_LONGER_LINE_LENGTH = 23;
-    private static final float DEFAULT_LINE_WIDTH = 0.5f;
-    private static final float DEFAULT_CIRCLE_BUTTON_RADIUS = 10;
+    private static final float DEFAULT_LINE_WIDTH = 1f;
+    private static final float DEFAULT_CIRCLE_BUTTON_RADIUS = 15;
     private static final float DEFAULT_CIRCLE_STROKE_WIDTH = 1;
-    private static final float DEFAULT_MIDDLE_VALUE_SIZE = 50;
-    private static final float DEFAULT_MIDDLE_TEXT_SIZE = 14;
+    private static final float DEFAULT_MIDDLE_VALUE_SIZE = 38;
+    private static final float DEFAULT_MIDDLE_TEXT_SIZE = 32;
     private static final float DEFAULT_GAP_BETWEEN_TIMER_NUMBER_AND_TEXT = 30;
 
     // Default color
-    private static final int DEFAULT_CIRCLE_COLOR = 0xFFE9E2D9;
+    private static final int DEFAULT_CIRCLE_COLOR = 0xFFE4358C;
+    private static final int DEFAULT_CIRCLE_RING_COLOR = 0xFFE4358C;
+    private static final int DEFAULT_INNER_CIRCLE_COLOR = Color.RED;
     private static final int DEFAULT_CIRCLE_BUTTON_COLOR = 0xFFFFFFFF;
     private static final int DEFAULT_LINE_COLOR = 0xFFE9E2D9;
     private static final int DEFAULT_HIGHLIGHT_LINE_COLOR = 0xFF68C5D7;
     private static final int DEFAULT_TICK_MARK_VALUE_COLOR = 0x99866A60;
-    private static final int DEFAULT_MIDDLE_VALUE_COLOR = 0xFFFA7777;
-    private static final int DEFAULT_MIDDLE_TEXT_COLOR = 0x99000000;
+    private static final int DEFAULT_MIDDLE_VALUE_COLOR = 0xFFE80F7B;
+    private static final int DEFAULT_MIDDLE_TEXT_COLOR = 0xFFE80F7B;
 
     private static final int DEFAULT_SMALL_TICK_MARK_NUM = 10;
     private static final int DEFAULT_BIG_TICK_MARK_NUM = 0;
 
     // Paint
     private Paint mCirclePaint;
+    private Paint mCircleRingPaint;
+    private Paint mInnerCirclePaint;
     private Paint mHighlightLinePaint;
     private Paint mLinePaint;
     private Paint mCircleButtonPaint;
@@ -69,6 +74,7 @@ public class DraggableCircleViewTwo extends View {
 
     // Dimension
     private float mGapBetweenCircleAndLine;
+    private float mGapBetweenInnerCircleAndLine;
     private float mGapBetweenNumberAndLine;
     private float mTickMarkValueSize;
     private float mLineLength;
@@ -76,12 +82,16 @@ public class DraggableCircleViewTwo extends View {
     private float mLineWidth;
     private float mCircleButtonRadius;
     private float mCircleStrokeWidth;
+    private float mCircleRingStrokeWidth;
+    private float mInnerCircleStrokeWidth;
     private float mMiddleValueSize;
     private float mMiddleTextSize;
     private float mGapBetweenTimerNumberAndText;
 
     // Color
     private int mCircleColor;
+    private int mCircleRingColor;
+    private int mInnerCircleColor;
     private int mCircleButtonColor;
     private int mLineColor;
     private int mHighlightLineColor;
@@ -92,12 +102,14 @@ public class DraggableCircleViewTwo extends View {
     // Parameters
     private float mCx;
     private float mCy;
-    private float mRadius;
+    private float mRadius; // 大圆半径
+    private float mInnerRadius; // 大圆内圆半径
     private float mCurrentRadian; // 当前弧度
     private float mPreRadian;
     private boolean mInCircleButton;
     private double mCurrentValue;
-    private String mHintText;
+    private String mMiddleText;
+    private String mMiddleValue;
 
     // control
     private boolean mIsRepeatRound = true; //是否可重复旋转
@@ -125,6 +137,7 @@ public class DraggableCircleViewTwo extends View {
         Log.d(TAG, "initialize");
         // Set default dimension or read xml attributes
         mGapBetweenCircleAndLine = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_GAP_BETWEEN_CIRCLE_AND_LINE, getContext().getResources().getDisplayMetrics());
+        mGapBetweenInnerCircleAndLine = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_GAP_BETWEEN_CIRCLE_AND_LINE, getContext().getResources().getDisplayMetrics());
         mGapBetweenNumberAndLine = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_GAP_BETWEEN_NUMBER_AND_LINE, getContext().getResources().getDisplayMetrics());
         mTickMarkValueSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_TICK_MARK_VALUE_SIZE, getContext().getResources().getDisplayMetrics());
         mLineLength = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_LINE_LENGTH, getContext().getResources().getDisplayMetrics());
@@ -132,12 +145,16 @@ public class DraggableCircleViewTwo extends View {
         mLineWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_LINE_WIDTH, getContext().getResources().getDisplayMetrics());
         mCircleButtonRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_CIRCLE_BUTTON_RADIUS, getContext().getResources().getDisplayMetrics());
         mCircleStrokeWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_CIRCLE_STROKE_WIDTH, getContext().getResources().getDisplayMetrics());
+        mCircleRingStrokeWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_LINE_LENGTH, getContext().getResources().getDisplayMetrics());
+        mInnerCircleStrokeWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_CIRCLE_STROKE_WIDTH, getContext().getResources().getDisplayMetrics());
         mMiddleValueSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_MIDDLE_VALUE_SIZE, getContext().getResources().getDisplayMetrics());
         mMiddleTextSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_MIDDLE_TEXT_SIZE, getContext().getResources().getDisplayMetrics());
         mGapBetweenTimerNumberAndText = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_GAP_BETWEEN_TIMER_NUMBER_AND_TEXT, getContext().getResources().getDisplayMetrics());
 
         // Set default color or read xml attributes
         mCircleColor = DEFAULT_CIRCLE_COLOR;
+        mCircleRingColor = DEFAULT_CIRCLE_RING_COLOR;
+        mInnerCircleColor = DEFAULT_INNER_CIRCLE_COLOR;
         mCircleButtonColor = DEFAULT_CIRCLE_BUTTON_COLOR;
         mLineColor = DEFAULT_LINE_COLOR;
         mHighlightLineColor = DEFAULT_HIGHLIGHT_LINE_COLOR;
@@ -152,12 +169,15 @@ public class DraggableCircleViewTwo extends View {
         // Init paints
         initPaint();
 
-        mHintText = "show what";
+        mMiddleText = "show what";
+        mMiddleValue = "5,3000";
     }
 
     private void initPaint() {
         // Init all paints
-        mCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG); // 消除锯齿
+        mCircleRingPaint = new Paint(Paint.ANTI_ALIAS_FLAG); // 消除锯齿
+        mInnerCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG); // 消除锯齿
         mCircleButtonPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mHighlightLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -167,8 +187,18 @@ public class DraggableCircleViewTwo extends View {
 
         // CirclePaint
         mCirclePaint.setColor(mCircleColor);
-        mCirclePaint.setStyle(Paint.Style.STROKE);
+        mCirclePaint.setStyle(Paint.Style.STROKE); // 绘制空心圆
         mCirclePaint.setStrokeWidth(mCircleStrokeWidth);
+
+        // CircleRingPaint
+        mCircleRingPaint.setColor(mCircleRingColor);
+        mCircleRingPaint.setStyle(Paint.Style.STROKE); // 绘制空心圆
+        mCircleRingPaint.setStrokeWidth(mCircleRingStrokeWidth); // this.mRadius - mCircleStrokeWidth / 2 - (this.mInnerRadius + mInnerCircleStrokeWidth / 2)
+
+        // InnerCirclePaint
+        mInnerCirclePaint.setColor(mInnerCircleColor);
+        mInnerCirclePaint.setStyle(Paint.Style.STROKE); // 绘制空心圆
+        mInnerCirclePaint.setStrokeWidth(mInnerCircleStrokeWidth);
 
         // CircleButtonPaint
         mCircleButtonPaint.setColor(mCircleButtonColor);
@@ -212,10 +242,12 @@ public class DraggableCircleViewTwo extends View {
             this.mRadius = width / 2 - mCircleStrokeWidth / 2;
             Log.d(TAG, "No exceed");
         } else {
-            this.mRadius = width / 2 - (mCircleButtonRadius - mGapBetweenCircleAndLine - mLineLength / 2 -
-                    mCircleStrokeWidth / 2);
+            this.mRadius = width / 2 - (mCircleButtonRadius - mGapBetweenCircleAndLine - mGapBetweenInnerCircleAndLine - mLineLength / 2 -
+                    mCircleStrokeWidth / 2 - mInnerCircleStrokeWidth / 2);
             Log.d(TAG, "Exceed");
         }
+        float innerRadius = this.mRadius - mCircleStrokeWidth / 2 - mCircleRingStrokeWidth - mInnerCircleStrokeWidth / 2;
+        this.mInnerRadius = innerRadius >= 0 ? innerRadius : 0;
         setMeasuredDimension(width, height);
     }
 
@@ -230,6 +262,10 @@ public class DraggableCircleViewTwo extends View {
         Log.d(TAG, "onDraw");
         // Content
         canvas.drawCircle(mCx, mCy, mRadius, mCirclePaint);
+        // Draw ring
+        canvas.drawCircle(mCx, mCy, mInnerRadius + 1 + mCircleRingStrokeWidth / 2, mCircleRingPaint);
+        // Draw inner circle
+        canvas.drawCircle(mCx, mCy, mInnerRadius, mInnerCirclePaint);
         // Scale line
         int interevalNum = 1; // 两个大刻度间隔的小刻度数
         if (mBigTickMarkNum > 0) {
@@ -271,17 +307,16 @@ public class DraggableCircleViewTwo extends View {
          */
         canvas.save();
         canvas.rotate((float) Math.toDegrees(mCurrentRadian), mCx, mCy);
-        canvas.drawCircle(mCx, getMeasuredHeight() / 2 - mRadius + mCircleStrokeWidth / 2 + mGapBetweenCircleAndLine +
-                mLineLength / 2, mCircleButtonRadius, mCircleButtonPaint);
+        canvas.drawCircle(mCx, getMeasuredHeight() / 2 - mRadius + mCircleStrokeWidth / 2 + mCircleRingStrokeWidth / 2, mCircleButtonRadius, mCircleButtonPaint);
 //        Log.d(TAG, "mCircleButton mCx=" + mCx + ", mCy=" + (getMeasuredHeight() / 2 - mRadius + mCircleStrokeWidth / 2 + mGapBetweenCircleAndLine + mLineLength / 2));
         canvas.restore();
         // TimerNumber
         canvas.save();
-        canvas.drawText(String.valueOf(getDecimalFormat(mCurrentValue / 10000)) + "万", mCx, mCy + getFontHeight(mMiddleValuePaint) / 2, mMiddleValuePaint);
+        canvas.drawText(String.valueOf(getDecimalFormat(mCurrentValue / 10000)) + "万", mCx, mCy + TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 18, getContext().getResources().getDisplayMetrics()) + getFontHeight(mMiddleValuePaint) / 2, mMiddleValuePaint);
         canvas.restore();
         // Timer Text
         canvas.save();
-        canvas.drawText(/*mHintText*/"第" + mCurrentCircle + "圈，每个刻度的间隔值是" + getSmallTickMarkIntervalValue(), mCx, mCy + getFontHeight(mMiddleValuePaint) / 2 + mGapBetweenTimerNumberAndText + getFontHeight(mMiddleTextPaint) / 2, mMiddleTextPaint);
+        canvas.drawText(mMiddleText, mCx, mCy - TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 18, getContext().getResources().getDisplayMetrics()) - getFontHeight(mMiddleTextPaint) / 2, mMiddleTextPaint);
         canvas.restore();
     }
 
@@ -585,6 +620,36 @@ public class DraggableCircleViewTwo extends View {
         }
 
         /**
+         * Set color for circleRing
+         *
+         * @param circleRingColor
+         */
+        public Builder setCircleRingColor(int circleRingColor) {
+            mCircleRingColor = circleRingColor;
+            return this;
+        }
+
+        /**
+         * Set color for circleRing
+         *
+         * @param circleRingStrokeWidth
+         */
+        public Builder setCircleRingStrokeWidth (int circleRingStrokeWidth) {
+            mCircleRingStrokeWidth = circleRingStrokeWidth;
+            return this;
+        }
+
+        /**
+         * Set color for innerCircle
+         *
+         * @param innerCircleColor
+         */
+        public Builder setInnerCircleColor(int innerCircleColor) {
+            mInnerCircleColor = innerCircleColor;
+            return this;
+        }
+
+        /**
          * Set color for circleButton
          *
          * @param circleButtonColor
@@ -741,6 +806,26 @@ public class DraggableCircleViewTwo extends View {
          */
         public Builder setMiddleTextSize(float middleTextSize) {
             mMiddleTextSize = middleTextSize;
+            return this;
+        }
+
+        /**
+         * Set String for middleText
+         *
+         * @param middleText
+         */
+        public Builder setMiddleText(String middleText) {
+            mMiddleText = middleText;
+            return this;
+        }
+
+        /**
+         * Set String for middleValueSize
+         *
+         * @param middleValue
+         */
+        public Builder setMiddleValue(String middleValue) {
+            mMiddleValue = middleValue;
             return this;
         }
 
