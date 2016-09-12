@@ -2,6 +2,7 @@ package com.changxiao.draggablecircledemo.widget;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -13,6 +14,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnticipateOvershootInterpolator;
 import android.view.animation.Interpolator;
+
+import com.changxiao.draggablecircledemo.R;
+import com.changxiao.draggablecircledemo.utils.ZRUtils;
 
 import java.text.DecimalFormat;
 
@@ -32,7 +36,14 @@ import java.text.DecimalFormat;
  */
 public class DraggableCircleViewTwo extends View {
 
-    private final String TAG = DraggableCircleViewTwo.class.getSimpleName();
+    private final String TAG = DraggableCircleView.class.getSimpleName();
+
+    /**
+     * 圆圈的类型，目标金额or达成日期
+     */
+    private int type;
+    private static final int TYPE_TARGETMONEY = 0;
+    private static final int TYPE_TARGETDATE = 1;
 
     // Default dimension in dp/pt
     private static final float DEFAULT_GAP_BETWEEN_CIRCLE_AND_LINE = 0;
@@ -110,6 +121,7 @@ public class DraggableCircleViewTwo extends View {
     private double mCurrentValue;
     private String mMiddleText;
     private String mMiddleValue;
+    private float mStartDegrees; // 起始角度
 
     // control
     private boolean mIsRepeatRound = true; //是否可重复旋转
@@ -170,7 +182,12 @@ public class DraggableCircleViewTwo extends View {
         initPaint();
 
         mMiddleText = "show what";
-        mMiddleValue = "5,3000";
+        mMiddleValue = "";
+
+        TypedArray a = getContext().obtainStyledAttributes(attrs,
+                R.styleable.DraggableCircleView);
+        type = a.getInt(R.styleable.DraggableCircleView_type, TYPE_TARGETMONEY);// 默认为目标金额
+        a.recycle();
     }
 
     private void initPaint() {
@@ -280,9 +297,9 @@ public class DraggableCircleViewTwo extends View {
         canvas.save();
         for (int i = 0; i < mSmallTickMarkNum; i++) {
             canvas.save();
-            canvas.rotate(360 / mSmallTickMarkNum * i, mCx, mCy);
+            canvas.rotate(360 / mSmallTickMarkNum * i + mStartDegrees, mCx, mCy);
             if (mHasBigTickMark && i % interevalNum == 0) { // 长刻度线
-                if (360 / mSmallTickMarkNum * i <= Math.toDegrees(mCurrentRadian)) { // 小球之前高亮mHighlightLinePaint
+                if (360 / mSmallTickMarkNum * i + mStartDegrees <= Math.toDegrees(mCurrentRadian)) { // 小球之前高亮mHighlightLinePaint
                     canvas.drawLine(mCx, getMeasuredHeight() / 2 - mRadius + mCircleStrokeWidth / 2 + mGapBetweenCircleAndLine, mCx, getMeasuredHeight() / 2 - mRadius + mCircleStrokeWidth / 2 + mGapBetweenCircleAndLine +
                             mLongerLineLength, mHighlightLinePaint);
                 } else { // 小球之后正常mLinePaint
@@ -290,7 +307,7 @@ public class DraggableCircleViewTwo extends View {
                             mLongerLineLength, mLinePaint);
                 }
             } else { // 短刻度线
-                if (360 / mSmallTickMarkNum * i <= Math.toDegrees(mCurrentRadian)) {
+                if (360 / mSmallTickMarkNum * i + mStartDegrees <= Math.toDegrees(mCurrentRadian)) {
                     canvas.drawLine(mCx, getMeasuredHeight() / 2 - mRadius + mCircleStrokeWidth / 2 + mGapBetweenCircleAndLine, mCx, getMeasuredHeight() / 2 - mRadius + mCircleStrokeWidth / 2 + mGapBetweenCircleAndLine + mLineLength, mHighlightLinePaint);
                 } else {
                     canvas.drawLine(mCx, getMeasuredHeight() / 2 - mRadius + mCircleStrokeWidth / 2 + mGapBetweenCircleAndLine, mCx, getMeasuredHeight() / 2 - mRadius + mCircleStrokeWidth / 2 + mGapBetweenCircleAndLine + mLineLength, mLinePaint);
@@ -306,17 +323,17 @@ public class DraggableCircleViewTwo extends View {
          * 2.canvas.save()和canvas.restore()必须要，不然画布旋转
          */
         canvas.save();
-        canvas.rotate((float) Math.toDegrees(mCurrentRadian), mCx, mCy);
+        canvas.rotate((float) Math.toDegrees(mCurrentRadian) + mStartDegrees, mCx, mCy);
         canvas.drawCircle(mCx, getMeasuredHeight() / 2 - mRadius + mCircleStrokeWidth / 2 + mCircleRingStrokeWidth / 2, mCircleButtonRadius, mCircleButtonPaint);
-//        Log.d(TAG, "mCircleButton mCx=" + mCx + ", mCy=" + (getMeasuredHeight() / 2 - mRadius + mCircleStrokeWidth / 2 + mGapBetweenCircleAndLine + mLineLength / 2));
+        //        Log.d(TAG, "mCircleButton mCx=" + mCx + ", mCy=" + (getMeasuredHeight() / 2 - mRadius + mCircleStrokeWidth / 2 + mGapBetweenCircleAndLine + mLineLength / 2));
         canvas.restore();
         // TimerNumber
         canvas.save();
-        canvas.drawText(String.valueOf(getDecimalFormat(mCurrentValue / 10000)) + "万", mCx, mCy + TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 18, getContext().getResources().getDisplayMetrics()) + getFontHeight(mMiddleValuePaint) / 2, mMiddleValuePaint);
+        canvas.drawText(mMiddleValue, mCx, mCy + TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getContext().getResources().getDisplayMetrics()) + getFontHeight(mMiddleValuePaint) / 2, mMiddleValuePaint);
         canvas.restore();
         // Timer Text
         canvas.save();
-        canvas.drawText(mMiddleText, mCx, mCy - TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 18, getContext().getResources().getDisplayMetrics()) - getFontHeight(mMiddleTextPaint) / 2, mMiddleTextPaint);
+        canvas.drawText(mMiddleText, mCx, mCy - TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getContext().getResources().getDisplayMetrics()) - getFontHeight(mMiddleTextPaint) / 2, mMiddleTextPaint);
         canvas.restore();
     }
 
@@ -359,10 +376,10 @@ public class DraggableCircleViewTwo extends View {
                     // 处理2 * Math.PI零界点
                     if (mPreRadian > Math.toRadians(270) && temp < Math.toRadians(90)) { // 顺时针穿过零界点
                         mPreRadian -= 2 * Math.PI;
-//                        Log.i(TAG, "顺时针mPreRadian: " +mPreRadian);
+                        //                        Log.i(TAG, "顺时针mPreRadian: " +mPreRadian);
                     } else if (mPreRadian < Math.toRadians(90) && temp > Math.toRadians(270)) { // 逆时针穿过零界点
                         mPreRadian = (float) (temp + (temp - 2 * Math.PI) - mPreRadian);
-//                        Log.i(TAG, "逆时针mPreRadian: " +mPreRadian);
+                        //                        Log.i(TAG, "逆时针mPreRadian: " +mPreRadian);
                     }
                     mCurrentRadian += (temp - mPreRadian);
                     mPreRadian = temp;
@@ -377,12 +394,12 @@ public class DraggableCircleViewTwo extends View {
                             mCurrentRadian = 0;
                         }
                     }
-//                    if (mCircleTimerListener != null)
-//                        mCircleTimerListener.onTimerSetValueChange(getCurrentTime());
+                    //                    if (mCircleTimerListener != null)
+                    //                        mCircleTimerListener.onTimerSetValueChange(getCurrentTime());
                     // 计算圈数
                     mCurrentCircle = getCurrentCircle(mCurrentRadian);
                     // 滚动计算当前金钱
-//                    Log.i(TAG, "当前第"+ mCurrentCircle +"圈");
+                    //                    Log.i(TAG, "当前第"+ mCurrentCircle +"圈");
                     double beforeSum = 0;
                     if (mCurrentCircle == 0) {
                         mCurrentValue = mEachCircleTotal[mCurrentCircle] / (2 * Math.PI) * mCurrentRadian;
@@ -400,14 +417,15 @@ public class DraggableCircleViewTwo extends View {
                         double tempMoney = mEachCircleTotal[mEachCircleTotal.length - 1] / (2 * Math.PI) * (mCurrentRadian - (2 * Math.PI) * mEachCircleTotal.length);
                         mCurrentValue = beforeSum + tempMoney;
                     }
+                    calculateMiddleValue();
                     invalidate();
                 }
                 break;
             case MotionEvent.ACTION_UP:
                 if (mInCircleButton && isEnabled()) {
                     mInCircleButton = false;
-//                    if (mCircleTimerListener != null)
-//                        mCircleTimerListener.onTimerSetValueChanged(getCurrentTime());
+                    //                    if (mCircleTimerListener != null)
+                    //                        mCircleTimerListener.onTimerSetValueChanged(getCurrentTime());
                 }
                 // 判断标准，开启缓冲动画
                 /*if (mCurrentRadian - mPreRadian < Math.PI / 4) {
@@ -419,6 +437,27 @@ public class DraggableCircleViewTwo extends View {
                 break;
         }
         return true;
+    }
+
+    /**
+     * 计算中间显示的文本值
+     */
+    private void calculateMiddleValue() {
+        if (type == TYPE_TARGETMONEY) {
+            mMiddleValue = String.valueOf(getDecimalFormat(mCurrentValue / 10000)) + "万";
+        } else if (type == TYPE_TARGETDATE) {
+            // 初始值
+            mMiddleValue = String.valueOf(ZRUtils.getCurrentYear()) + "." + String.valueOf(ZRUtils.getCurrentMonth());
+            int years = (int) ((mCurrentValue + ZRUtils.getCurrentMonth()) / 12);
+            int months = (int) ((mCurrentValue + ZRUtils.getCurrentMonth()) % 12);
+            if (((int) mCurrentValue + ZRUtils.getCurrentMonth()) % 12 == 0) {
+                months = 12;
+                years = years - 1;
+
+            }
+            Log.i(TAG, "mCurrentValue=" + mCurrentValue + ", years=" + years + ", months=" + months);
+            mMiddleValue = String.valueOf(ZRUtils.getCurrentYear() + years) + "." + (months < 10 ? "0" + String.valueOf(months) : String.valueOf(months));
+        }
     }
 
     private double calculateValue(float currentRadian) {
@@ -532,6 +571,17 @@ public class DraggableCircleViewTwo extends View {
     /**************************************public api***********************************************/
 
     public final class Builder {
+
+        /**
+         * 设置初始化角度
+         *
+         * @param startDegrees
+         */
+        public Builder setStartDegrees(int startDegrees) {
+            mStartDegrees = startDegrees;
+            mCurrentRadian = (float) Math.toRadians(startDegrees);
+            return this;
+        }
 
         /**
          * 设置小刻度总数(平均分为多少份)
@@ -825,7 +875,7 @@ public class DraggableCircleViewTwo extends View {
          * @param middleValue
          */
         public Builder setMiddleValue(String middleValue) {
-            mMiddleValue = middleValue;
+            mMiddleValue = String.valueOf(Integer.parseInt(middleValue) < 10 ? "0" + middleValue : middleValue);
             return this;
         }
 

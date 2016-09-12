@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="type">
+        <enum name="targetMoney" value="0"/>
+        <enum name="targetDate" value="1"/>
+    </attr>
+
+    <declare-styleable name="DraggableCircleView">
+        <attr name="type"/>
+    </declare-styleable>
+</resources>
