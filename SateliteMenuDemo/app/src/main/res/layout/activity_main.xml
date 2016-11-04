@@ -15,7 +15,7 @@
         android:id="@+id/sateliteMenu"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android_custom:position="right_bottom"
+        android_custom:position="left_bottom"
         android_custom:radius="130dp">
 
         <!--菜单主按钮-->
@@ -66,4 +66,50 @@
             android:src="@mipmap/ic_launcher"
             android:tag="6" />
     </com.changxiao.satelitemenudemo.widget.SateliteMenu>
+
+    <com.changxiao.satelitemenudemo.widget.SateliteMenuTwo
+        android:id="@+id/sateliteMenuTwo"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_below="@id/sateliteMenu"
+        android:layout_marginTop="20dp"
+        android:background="#ffcccc"
+        android_custom:position="right_top_custom"
+        android_custom:radius="100dp">
+
+        <!--菜单主按钮-->
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_launcher" />
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/delete"
+            android:tag="1" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/fast_cash"
+            android:tag="2" />
+    </com.changxiao.satelitemenudemo.widget.SateliteMenuTwo>
+
+    <LinearLayout
+        android:id="@+id/ll_container"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_below="@id/sateliteMenu"
+        android:layout_marginTop="20dp"
+        android:background="#ffcccc"
+        android:orientation="horizontal">
+
+    </LinearLayout>
 </RelativeLayout>
