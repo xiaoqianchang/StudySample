@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:text="点击测试"
+        android:text="Click点击测试"
         android:textColor="@android:color/black"/>
 
     <Button
@@ -22,6 +22,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:text="点击测试"
+        android:text="Double点击测试"
         android:textColor="@android:color/black"/>
 </LinearLayout>

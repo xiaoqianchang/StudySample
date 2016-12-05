@@ -1,16 +1,5 @@
 package com.changxiao.doubleclickdetectdemo.utils;
 
-import android.view.View;
-
-import com.jakewharton.rxbinding.view.RxView;
-
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-
 /**
  * 检测双击Utils
  *
@@ -57,26 +46,4 @@ public class DoubleClickDetectUtils {
         return isDoubleClick;
     }
 
-    private boolean isDoubleClick;
-    public boolean doubleClickDetect(View view) {
-        isDoubleClick = false;
-        Observable<Void> observable = RxView.clicks(view).share();
-        observable.buffer(observable.debounce(SPACE_TIME, TimeUnit.MILLISECONDS))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<List<Void>>() {
-                    @Override
-                    public void call(List<Void> voids) {
-                        if (voids.size() >= 2) {
-                            // double click detected
-                            isDoubleClick = true;
-                        }
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-
-                    }
-                });
-        return isDoubleClick;
-    }
 }
