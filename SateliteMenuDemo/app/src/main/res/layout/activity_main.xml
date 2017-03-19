@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android_custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -66,4 +67,36 @@
             android:src="@mipmap/ic_launcher"
             android:tag="6" />
     </com.changxiao.satelitemenudemo.widget.SateliteMenu>
-</RelativeLayout>
+
+    <com.changxiao.satelitemenudemo.widget.SateliteMenuTwo
+        android:id="@+id/sateliteMenuTwo"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android_custom:position="right_top"
+        android_custom:radius="130dp">
+
+        <!--菜单主按钮-->
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_launcher" />
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher"
+            android:tag="1" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher"
+            android:tag="2" />
+    </com.changxiao.satelitemenudemo.widget.SateliteMenuTwo>
+</LinearLayout>

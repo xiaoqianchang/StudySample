@@ -16,15 +16,13 @@ import android.view.animation.TranslateAnimation;
 import com.changxiao.satelitemenudemo.R;
 
 /**
- * 卫星式菜单
- * 注意：
- * 1.当前控件除了menu子布局外，弹出menu至少为两个(double angle = 90 / (count - 2);)
+ * 卫星式菜单，自定义改变方向
  * <p/>
  * Created by Chang.Xiao on 2016/9/14.
  *
  * @version 1.0
  */
-public class SateliteMenu extends ViewGroup implements View.OnClickListener {
+public class SateliteMenuTwo extends ViewGroup implements View.OnClickListener {
     public enum Position {
         POS_LEFT_TOP, POS_LEFT_BOTTOM, POS_RIGHT_TOP, POS_RIGHT_BOTTOM
     }
@@ -52,15 +50,15 @@ public class SateliteMenu extends ViewGroup implements View.OnClickListener {
     }
 
 
-    public SateliteMenu(Context context) {
+    public SateliteMenuTwo(Context context) {
         this(context, null);
     }
 
-    public SateliteMenu(Context context, AttributeSet attrs) {
+    public SateliteMenuTwo(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public SateliteMenu(Context context, AttributeSet attrs, int defStyleAttr) {
+    public SateliteMenuTwo(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.SateliteMenu);
@@ -133,7 +131,7 @@ public class SateliteMenu extends ViewGroup implements View.OnClickListener {
             余弦公式：cosa=b/c,且已知radius(斜边)，求出b边长，即y坐标
          */
         int count = getChildCount();
-        double angle = 90.0f / (count - 2);//这里-2，是多减去了一个menuButton
+        double angle = 90.0f / (count - 1);//这里-2，是多减去了一个menuButton
         View child;
         int w, h;
         for (int i = 1; i < count; i++) {
@@ -145,8 +143,8 @@ public class SateliteMenu extends ViewGroup implements View.OnClickListener {
             //Math.toRadians：math.pi/180 * angle = 弧度   angel/180*pi<==>angel*pi/180
             sin = Math.sin(Math.toRadians(angle * (i - 1))); //第i个角度的 sin(0)=0   i-1即从0开始,会有与屏幕直角边平行的 math.sin需要传弧度值
             cos = Math.cos(Math.toRadians(angle * (i - 1)));// 邻直角边/斜边   cos(0)=1
-            l = (int) (mRadius * sin); //对横边长
-            t = (int) (mRadius * cos); //邻纵边长
+            l = (int) (mRadius * sin); //对横边长(x)
+            t = (int) (mRadius * cos); //邻纵边长(y)
 
             //左上，左下 left值 就是上面的l l递增    符合默认变化规则
             //左上，右上 top值 就是上面的t  t递减    符合默认变化规则
@@ -158,6 +156,12 @@ public class SateliteMenu extends ViewGroup implements View.OnClickListener {
             //左下、右下 top值一样: 从上向下 递增
             if (mPosition == Position.POS_LEFT_BOTTOM || mPosition == Position.POS_RIGHT_BOTTOM) {
                 t = getMeasuredHeight() - h - t;
+            }
+
+            // 右上
+            if (mPosition == Position.POS_RIGHT_TOP) {
+//                l = getMeasuredWidth() / 2 - w + l; // l // getMeasuredWidth() + 100
+                t = getMeasuredHeight() - h - t; // - t
             }
 
             child.layout(l, t, l + w, t + h);
@@ -191,8 +195,12 @@ public class SateliteMenu extends ViewGroup implements View.OnClickListener {
                 l = t = 0;
                 break;
             case POS_RIGHT_TOP:
-                l = getMeasuredWidth() - w;
-                t = 0;
+//                l = getMeasuredWidth() - w;
+//                t = 0;
+//                l = getMeasuredWidth() / 2 + w;
+//                t = getMeasuredHeight() / 2 - h;
+                l = 0;
+                t = getMeasuredHeight() - h;
                 break;
             case POS_LEFT_BOTTOM:
                 l = 0;
@@ -210,7 +218,7 @@ public class SateliteMenu extends ViewGroup implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        rotateMenuBotton(mMenuButton, 360, 500);
+//        rotateMenuBotton(mMenuButton, 360, 500);
         toggleMenu(500);
 
     }
@@ -246,21 +254,21 @@ public class SateliteMenu extends ViewGroup implements View.OnClickListener {
 
                 */
             int xflag = 1, yflag = 1;
-            //
-            if (mPosition == Position.POS_LEFT_TOP || mPosition == Position.POS_LEFT_BOTTOM) {
+            // 默认子menu是展开的，开始慢慢关闭，在左上/左下x轴位移变小
+            if (mPosition == Position.POS_LEFT_TOP || mPosition == Position.POS_LEFT_BOTTOM || mPosition == Position.POS_RIGHT_TOP) {
                 xflag = -1;
             }
-            //
-            if (mPosition == Position.POS_LEFT_TOP || mPosition == Position.POS_RIGHT_TOP) {
+            // 默认子menu是展开的，开始慢慢关闭，在左上/左下x轴位移变小
+            if (mPosition == Position.POS_LEFT_TOP) {
                 yflag = -1;
             }
 
-            double angle = 90 / (count - 2);
+            double angle = 90 / (count - 1);
             /*
              一个圆的弧度是2π,角度是360°   π/2即90度的弧度
              */
-            int oppositeLen = (int) (mRadius * Math.sin(Math.PI / 2 / (count - 2) * (i - 1))); //对边 横向
-            int adjacentLen = (int) (mRadius * Math.cos(Math.PI / 2 / (count - 2) * (i - 1))); //邻边 纵向
+            int oppositeLen = (int) (mRadius * Math.sin(Math.PI / 2 / (count - 1) * (i - 1))); //对边 横向(当前子menu的x坐标)
+            int adjacentLen = (int) (mRadius * Math.cos(Math.PI / 2 / (count - 1) * (i - 1))); //邻边 纵向(当前子menu的y坐标)
 /*
  一个圆的弧度是2π,角度是360°  π/180，每角度对应的弧度   然后乘以角度数=其所对应的弧度
  */
