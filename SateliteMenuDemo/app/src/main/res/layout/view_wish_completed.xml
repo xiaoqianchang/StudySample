@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/img_add_wish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="60dp"
+        android:src="@mipmap/delete" />
+
+    <ImageView
+        android:id="@+id/img_wish_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/img_add_wish"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="30dp"
+        android:src="@mipmap/fast_cash" />
+
+</RelativeLayout>

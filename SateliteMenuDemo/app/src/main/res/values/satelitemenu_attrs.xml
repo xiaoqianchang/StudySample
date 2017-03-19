@@ -5,6 +5,7 @@
         <enum name="left_bottom" value="1"/>
         <enum name="right_top" value="2"/>
         <enum name="right_bottom" value="3"/>
+        <enum name="right_top_custom" value="4"/>
     </attr>
 
     <declare-styleable name="SateliteMenu">

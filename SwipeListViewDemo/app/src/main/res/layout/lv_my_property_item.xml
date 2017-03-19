@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_group_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="5dp"
+            android:gravity="center"
+            android:singleLine="true"
+            android:ellipsize="end"
+            tools:text="华夏成长1号"
+            android:textColor="#222222"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/tv_balance"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:singleLine="true"
+            android:ellipsize="end"
+            tools:text="￥10000.00"
+            android:textColor="#222222"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/tv_income"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:singleLine="true"
+            android:ellipsize="end"
+            tools:text="￥1000.00"
+            android:textColor="#222222"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/tv_purchase"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="申购"
+            android:textColor="#6e7ff2"
+            android:textSize="15sp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="70dp"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_redemption"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#f8593c"
+            android:gravity="center"
+            android:text="赎回"
+            android:textColor="#ffffff"
+            android:textSize="15sp"/>
+    </LinearLayout>
+</LinearLayout>
