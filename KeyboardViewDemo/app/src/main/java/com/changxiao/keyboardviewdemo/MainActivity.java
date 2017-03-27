@@ -18,6 +18,7 @@ import java.lang.reflect.Method;
 public class MainActivity extends AppCompatActivity {
 
     private EditText edtInput;
+    private EditText edtInput2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,36 +41,39 @@ public class MainActivity extends AppCompatActivity {
         });
 
         edtInput = (EditText) findViewById(R.id.edt_input);
+        edtInput2 = (EditText) findViewById(R.id.edt_password);
         edtInput.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                //隐藏输入法，显示光标
-                EditText et=(EditText)v;
-                int inType = et.getInputType(); // back up the input type
-                int sdkInt= Build.VERSION.SDK_INT;
-                if (sdkInt>=11) {
-                    Class<EditText> cls=EditText.class;
-                    try {
-                        Method setShowSoftInputOnFocus=cls.getMethod("setShowSoftInputOnFocus", boolean.class);
-                        setShowSoftInputOnFocus.setAccessible(false);
-                        setShowSoftInputOnFocus.invoke(et, false);
-                    } catch (NoSuchMethodException e) {
-                        e.printStackTrace();
-                    } catch (IllegalArgumentException e) {
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    } catch (InvocationTargetException e) {
-                        e.printStackTrace();
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    //隐藏输入法，显示光标
+                    EditText et=(EditText)v;
+                    int inType = et.getInputType(); // back up the input type
+                    int sdkInt= Build.VERSION.SDK_INT;
+                    if (sdkInt>=11) {
+                        Class<EditText> cls=EditText.class;
+                        try {
+                            Method setShowSoftInputOnFocus=cls.getMethod("setShowSoftInputOnFocus", boolean.class);
+                            setShowSoftInputOnFocus.setAccessible(false);
+                            setShowSoftInputOnFocus.invoke(et, false);
+                        } catch (NoSuchMethodException e) {
+                            e.printStackTrace();
+                        } catch (IllegalArgumentException e) {
+                            e.printStackTrace();
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        } catch (InvocationTargetException e) {
+                            e.printStackTrace();
+                        }
+                    }else {
+                        et.setInputType(android.text.InputType.TYPE_NULL); // disable soft input
+                        et.setInputType(inType);
+
                     }
-                }else {
-                    et.setInputType(android.text.InputType.TYPE_NULL); // disable soft input
-                    et.setInputType(inType);
 
+                    et.onTouchEvent(event);// call native handler
+                    PasswordFragmentTwo.newInstace().show(getSupportFragmentManager(), "PassWordFragmentTwo");
                 }
-
-                et.onTouchEvent(event);// call native handler
-                PasswordFragmentTwo.newInstace().show(getSupportFragmentManager(), "PassWordFragmentTwo");
                 return true;
             }
         });
