@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.changxiao.keyboardviewdemo.dialog.PasswordDialog;
 import com.changxiao.keyboardviewdemo.fragment.PasswordFragment;
 import com.changxiao.keyboardviewdemo.fragment.PasswordFragmentTwo;
 
@@ -30,6 +31,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 PasswordFragment.newInstace().show(getSupportFragmentManager(), "PassWordFragment");
+            }
+        });
+
+        Button btnShowPassword = (Button) findViewById(R.id.btn_show_password);
+        btnShowPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new PasswordDialog(MainActivity.this).show();
             }
         });
 
