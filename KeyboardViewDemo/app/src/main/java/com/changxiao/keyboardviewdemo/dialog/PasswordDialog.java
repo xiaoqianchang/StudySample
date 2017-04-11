@@ -5,6 +5,10 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatDialog;
+import android.view.Display;
+import android.view.Gravity;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.changxiao.keyboardviewdemo.R;
 
@@ -33,8 +37,17 @@ public class PasswordDialog extends AppCompatDialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         setContentView(R.layout.dialog_password);
-        setCanceledOnTouchOutside(true);
+
+        Window window = getWindow();
+        window.setGravity(Gravity.BOTTOM);
+        window.getDecorView().setPadding(0, 0, 0, 0);
+        WindowManager windowManager = window.getWindowManager();
+        Display display = windowManager.getDefaultDisplay();
+        WindowManager.LayoutParams windowparams = window.getAttributes();
+        windowparams.width = display.getWidth(); // 设置dialog的宽度为当前手机屏幕的宽度
+//        window.setWindowAnimations(R.style.animationBottomTranslate);
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        window.setAttributes(windowparams);
     }
 }
