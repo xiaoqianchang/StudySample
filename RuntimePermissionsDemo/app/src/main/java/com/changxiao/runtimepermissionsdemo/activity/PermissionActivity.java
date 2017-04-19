@@ -1,4 +1,4 @@
-package com.changxiao.runtimepermissionsdemo;
+package com.changxiao.runtimepermissionsdemo.activity;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.changxiao.runtimepermissionsdemo.R;
 import com.changxiao.runtimepermissionsdemo.utils.PermissionHelper;
 
 /**
@@ -25,19 +26,9 @@ public class PermissionActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_permission);
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        PermissionsFragment fragment = new PermissionsFragment();
-        transaction.replace(R.id.content_fragment, fragment);
-        transaction.commit();
-
     }
 
-    /**
-     * Called when the 'show camera' button is clicked.
-     * Callback is defined in resource layout definition.
-     */
     public void showCamera(View view) {
-        Log.i(TAG, "Show camera button pressed. Checking permission.");
         PermissionHelper.requestPermission(this, PermissionHelper.CODE_CAMERA, mPermissionGrant);
     }
 
@@ -114,6 +105,11 @@ public class PermissionActivity extends AppCompatActivity {
         public void onPremissionDenied(int requestCode) {
 
         }
+
+        @Override
+        public void onPremissionNeverAskAgain(int requestCode) {
+
+        }
     };
 
     /**
@@ -122,6 +118,6 @@ public class PermissionActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(final int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        PermissionHelper.requestPermissionsResult(this, requestCode, permissions, grantResults, mPermissionGrant);
+        PermissionHelper.onRequestPermissionsResult(this, requestCode, permissions, grantResults, mPermissionGrant);
     }
 }
