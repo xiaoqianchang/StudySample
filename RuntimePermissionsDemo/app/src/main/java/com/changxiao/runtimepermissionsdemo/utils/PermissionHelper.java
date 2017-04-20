@@ -238,7 +238,7 @@ public class PermissionHelper {
             onPermissionListener.onPermissionGranted(requestCode);
         } else {
             if (!PermissionUtils.shouldShowRequestPermissionRationale(activity, permissions)) {
-//                onPermissionListener.onPremissionNeverAskAgain(requestCode);
+                onPermissionListener.onPremissionNeverAskAgain(requestCode);
                 String[] permissionsHint = activity.getResources().getStringArray(R.array.permissions);
                 openSettingActivity(activity,  permissionsHint[requestCode]);
             } else {
