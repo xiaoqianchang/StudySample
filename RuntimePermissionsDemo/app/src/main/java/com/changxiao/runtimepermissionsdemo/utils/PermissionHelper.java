@@ -120,10 +120,13 @@ public class PermissionHelper {
     };
 
     /**
-     * Requests permission.
+     * 通过权限组请求权限
+     *
+     * 局限：当权限组中申请某个权限，而这个权限刚好没在manifest.xml中申请，而是同组的另外权限的话，该方法不可用。
      *
      * @param activity
-     * @param requestCode request code, e.g. if you need request CAMERA permission,parameters is PermissionHelper.CODE_CAMERA
+     * @param requestCode
+     * @param onPermissionListener
      */
     public static void requestPermission(final Activity activity, final int requestCode, OnPermissionListener onPermissionListener) {
         if (activity == null) {
@@ -157,7 +160,7 @@ public class PermissionHelper {
     }
 
     /**
-     * 直接请求权限
+     * 直接通过指定的权限名称请求权限
      *
      * @param activity
      * @param onPermissionListener
