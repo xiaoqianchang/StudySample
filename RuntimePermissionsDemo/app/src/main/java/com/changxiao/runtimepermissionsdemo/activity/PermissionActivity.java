@@ -28,40 +28,40 @@ public class PermissionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_permission);
     }
 
-    public void showCamera(View view) {
+    public void contacts(View view) {
+        PermissionHelper.requestPermission(this, PermissionHelper.CODE_CONTACTS, mPermissionGrant);
+    }
+
+    public void phone(View view) {
+        PermissionHelper.requestPermission(this, PermissionHelper.CODE_PHONE, mPermissionGrant);
+    }
+
+    public void calendar(View view) {
+        PermissionHelper.requestPermission(this, PermissionHelper.CODE_CALENDAR, mPermissionGrant);
+    }
+
+    public void camera(View view) {
         PermissionHelper.requestPermission(this, PermissionHelper.CODE_CAMERA, mPermissionGrant);
     }
 
-    public void getAccounts(View view) {
-        PermissionHelper.requestPermission(this, PermissionHelper.CODE_GET_ACCOUNTS, mPermissionGrant);
+    public void sensors(View view) {
+        PermissionHelper.requestPermission(this, PermissionHelper.CODE_SENSORS, mPermissionGrant);
     }
 
-    public void callPhone(View view) {
-        PermissionHelper.requestPermission(this, PermissionHelper.CODE_CALL_PHONE, mPermissionGrant);
+    public void location(View view) {
+        PermissionHelper.requestPermission(this, PermissionHelper.CODE_LOCATION, mPermissionGrant);
     }
 
-    public void readPhoneState(View view) {
-        PermissionHelper.requestPermission(this, PermissionHelper.CODE_READ_PHONE_STATE, mPermissionGrant);
+    public void storage(View view) {
+        PermissionHelper.requestPermission(this, PermissionHelper.CODE_STORAGE, mPermissionGrant);
     }
 
-    public void accessFineLocation(View view) {
-        PermissionHelper.requestPermission(this, PermissionHelper.CODE_ACCESS_FINE_LOCATION, mPermissionGrant);
+    public void microphone(View view) {
+        PermissionHelper.requestPermission(this, PermissionHelper.CODE_MICROPHONE, mPermissionGrant);
     }
 
-    public void accessCoarseLocation(View view) {
-        PermissionHelper.requestPermission(this, PermissionHelper.CODE_ACCESS_COARSE_LOCATION, mPermissionGrant);
-    }
-
-    public void readExternalStorage(View view) {
-        PermissionHelper.requestPermission(this, PermissionHelper.CODE_READ_EXTERNAL_STORAGE, mPermissionGrant);
-    }
-
-    public void writeExternalStorage(View view) {
-        PermissionHelper.requestPermission(this, PermissionHelper.CODE_WRITE_EXTERNAL_STORAGE, mPermissionGrant);
-    }
-
-    public void recordAudio(View view) {
-        PermissionHelper.requestPermission(this, PermissionHelper.CODE_RECORD_AUDIO, mPermissionGrant);
+    public void sms(View view) {
+        PermissionHelper.requestPermission(this, PermissionHelper.CODE_SMS, mPermissionGrant);
     }
 
 
@@ -69,32 +69,32 @@ public class PermissionActivity extends AppCompatActivity {
         @Override
         public void onPermissionGranted(int requestCode) {
             switch (requestCode) {
-                case PermissionHelper.CODE_RECORD_AUDIO:
-                    Toast.makeText(PermissionActivity.this, "Result Permission Grant CODE_RECORD_AUDIO", Toast.LENGTH_SHORT).show();
+                case PermissionHelper.CODE_CONTACTS:
+                    Toast.makeText(PermissionActivity.this, "Result Permission Grant Success", Toast.LENGTH_SHORT).show();
                     break;
-                case PermissionHelper.CODE_GET_ACCOUNTS:
-                    Toast.makeText(PermissionActivity.this, "Result Permission Grant CODE_GET_ACCOUNTS", Toast.LENGTH_SHORT).show();
+                case PermissionHelper.CODE_PHONE:
+                    Toast.makeText(PermissionActivity.this, "Result Permission Grant Success", Toast.LENGTH_SHORT).show();
                     break;
-                case PermissionHelper.CODE_READ_PHONE_STATE:
-                    Toast.makeText(PermissionActivity.this, "Result Permission Grant CODE_READ_PHONE_STATE", Toast.LENGTH_SHORT).show();
-                    break;
-                case PermissionHelper.CODE_CALL_PHONE:
-                    Toast.makeText(PermissionActivity.this, "Result Permission Grant CODE_CALL_PHONE", Toast.LENGTH_SHORT).show();
+                case PermissionHelper.CODE_CALENDAR:
+                    Toast.makeText(PermissionActivity.this, "Result Permission Grant Success", Toast.LENGTH_SHORT).show();
                     break;
                 case PermissionHelper.CODE_CAMERA:
-                    Toast.makeText(PermissionActivity.this, "Result Permission Grant CODE_CAMERA", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PermissionActivity.this, "Result Permission Grant Success", Toast.LENGTH_SHORT).show();
                     break;
-                case PermissionHelper.CODE_ACCESS_FINE_LOCATION:
-                    Toast.makeText(PermissionActivity.this, "Result Permission Grant CODE_ACCESS_FINE_LOCATION", Toast.LENGTH_SHORT).show();
+                case PermissionHelper.CODE_SENSORS:
+                    Toast.makeText(PermissionActivity.this, "Result Permission Grant Success", Toast.LENGTH_SHORT).show();
                     break;
-                case PermissionHelper.CODE_ACCESS_COARSE_LOCATION:
-                    Toast.makeText(PermissionActivity.this, "Result Permission Grant CODE_ACCESS_COARSE_LOCATION", Toast.LENGTH_SHORT).show();
+                case PermissionHelper.CODE_LOCATION:
+                    Toast.makeText(PermissionActivity.this, "Result Permission Grant Success", Toast.LENGTH_SHORT).show();
                     break;
-                case PermissionHelper.CODE_READ_EXTERNAL_STORAGE:
-                    Toast.makeText(PermissionActivity.this, "Result Permission Grant CODE_READ_EXTERNAL_STORAGE", Toast.LENGTH_SHORT).show();
+                case PermissionHelper.CODE_STORAGE:
+                    Toast.makeText(PermissionActivity.this, "Result Permission Grant Success", Toast.LENGTH_SHORT).show();
                     break;
-                case PermissionHelper.CODE_WRITE_EXTERNAL_STORAGE:
-                    Toast.makeText(PermissionActivity.this, "Result Permission Grant CODE_WRITE_EXTERNAL_STORAGE", Toast.LENGTH_SHORT).show();
+                case PermissionHelper.CODE_MICROPHONE:
+                    Toast.makeText(PermissionActivity.this, "Result Permission Grant Success", Toast.LENGTH_SHORT).show();
+                    break;
+                case PermissionHelper.CODE_SMS:
+                    Toast.makeText(PermissionActivity.this, "Result Permission Grant Success", Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;
@@ -103,7 +103,7 @@ public class PermissionActivity extends AppCompatActivity {
 
         @Override
         public void onPremissionDenied(int requestCode) {
-
+            Toast.makeText(PermissionActivity.this, "Result Permission Grant Failure", Toast.LENGTH_SHORT).show();
         }
 
         @Override

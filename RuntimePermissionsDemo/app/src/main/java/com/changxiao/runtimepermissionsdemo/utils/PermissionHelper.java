@@ -4,21 +4,14 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.changxiao.runtimepermissionsdemo.R;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * android >=M 的权限申请统一处理
@@ -70,6 +63,16 @@ import java.util.Map;
  * notice:
  * 很多手机对原生系统做了修改，比如小米4的6.0的shouldShowRequestPermissionRationale
  * 就一直返回false，而且在申请权限时，如果用户选择了拒绝，则不会再弹出对话框了
+ *
+ * 针对于 shouldShowRequestPermissionRationale 方法返回值的情况 如下表格：
+ * 某个权限请求次数     系统权限框显示前(shouldShowRequestPermissionRationale返回值)    系统权限框显示后(shouldShowRequestPermissionRationale返回值)
+ * ---------------------------------------------------------------------------------------------------------------------------------------------
+ * first                false                                                           true
+ * second               true                                                            true
+ * 勾选不在提醒并拒绝     true                                                            false
+ * 再次请求权限           false                                                           false
+ *
+ * 第一次安装并且要请求某个权限：系统权限框显示前 onRequestPermissionsResult
  * <p>
  * Created by Chang.Xiao on 2016/11/22.
  *
@@ -81,7 +84,7 @@ public class PermissionHelper {
     private static final String TAG = PermissionHelper.class.getSimpleName();
 
     /**
-     * permission_group
+     * permission_group code
      */
     public static final int CODE_CALENDAR = 0;
     public static final int CODE_CAMERA = 1;
@@ -94,26 +97,26 @@ public class PermissionHelper {
     public static final int CODE_STORAGE = 8;
     public static final int CODE_MULTI_PERMISSION = 100;
 
-    public static final String PERMISSION_GET_ACCOUNTS = Manifest.permission.GET_ACCOUNTS;
-    public static final String PERMISSION_READ_PHONE_STATE = Manifest.permission.READ_PHONE_STATE;
     public static final String PERMISSION_READ_CALENDAR = Manifest.permission.READ_CALENDAR;
     public static final String PERMISSION_CAMERA = Manifest.permission.CAMERA;
-    public static final String PERMISSION_BODY_SENSORS = Manifest.permission.BODY_SENSORS;
+    public static final String PERMISSION_GET_ACCOUNTS = Manifest.permission.GET_ACCOUNTS;
     public static final String PERMISSION_ACCESS_FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
-    public static final String PERMISSION_READ_EXTERNAL_STORAGE = Manifest.permission.READ_EXTERNAL_STORAGE;
     public static final String PERMISSION_RECORD_AUDIO = Manifest.permission.RECORD_AUDIO;
+    public static final String PERMISSION_READ_PHONE_STATE = Manifest.permission.READ_PHONE_STATE;
+    public static final String PERMISSION_BODY_SENSORS = Manifest.permission.BODY_SENSORS;
     public static final String PERMISSION_READ_SMS = Manifest.permission.READ_SMS;
+    public static final String PERMISSION_READ_EXTERNAL_STORAGE = Manifest.permission.READ_EXTERNAL_STORAGE;
 
     private static final String[] requestPermissions = {
-            PERMISSION_GET_ACCOUNTS,
-            PERMISSION_READ_PHONE_STATE,
             PERMISSION_READ_CALENDAR,
             PERMISSION_CAMERA,
-            PERMISSION_BODY_SENSORS,
+            PERMISSION_GET_ACCOUNTS,
             PERMISSION_ACCESS_FINE_LOCATION,
-            PERMISSION_READ_EXTERNAL_STORAGE,
             PERMISSION_RECORD_AUDIO,
-            PERMISSION_READ_SMS
+            PERMISSION_READ_PHONE_STATE,
+            PERMISSION_BODY_SENSORS,
+            PERMISSION_READ_SMS,
+            PERMISSION_READ_EXTERNAL_STORAGE,
     };
 
     /**
@@ -153,26 +156,59 @@ public class PermissionHelper {
         }
     }
 
-    private static void showRationale(final Activity activity, final int requestCode, final String requestPermission) {
-        //TODO
+    /**
+     * 直接请求权限
+     *
+     * @param activity
+     * @param onPermissionListener
+     * @param requestCode
+     * @param permissions Manifest.permission.WRITE_CONTACTS
+     */
+    public static void requestPermission(final Activity activity, OnPermissionListener onPermissionListener, final int requestCode, final String... permissions) {
+        if (activity == null) {
+            return;
+        }
+        if (PermissionUtils.hasSelfPermissions(activity, permissions)) {
+            onPermissionListener.onPermissionGranted(requestCode);
+        } else {
+            if (PermissionUtils.shouldShowRequestPermissionRationale(activity, permissions)) {
+                showRationale(activity, requestCode, permissions);
+            } else {
+                ActivityCompat.requestPermissions(activity, permissions, requestCode);
+            }
+        }
+    }
+
+    /**
+     * show 基本原理
+     *
+     * @param activity
+     * @param requestCode
+     * @param requestPermission
+     */
+    private static void showRationale(final Activity activity, final int requestCode, final String... requestPermission) {
         String[] permissionsHint = activity.getResources().getStringArray(R.array.permissions);
         showMessageOKCancel(activity, "Rationale: " + permissionsHint[requestCode], new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ActivityCompat.requestPermissions(activity,
-                        new String[]{requestPermission},
-                        requestCode);
-                Log.d(TAG, "showMessageOKCancel requestPermissions:" + requestPermission);
+                ActivityCompat.requestPermissions(activity, requestPermission, requestCode);
             }
         });
     }
 
+    /**
+     * 显示自己定义的权限提示 Dialog
+     *
+     * @param context
+     * @param message
+     * @param okListener
+     */
     private static void showMessageOKCancel(final Activity context, String message, DialogInterface.OnClickListener okListener) {
         new AlertDialog.Builder(context)
                 .setMessage(message)
                 .setPositiveButton("OK", okListener)
                 .setNegativeButton("Cancel", null)
-                .create()
+                .setCancelable(false)
                 .show();
 
     }
@@ -202,17 +238,22 @@ public class PermissionHelper {
             onPermissionListener.onPermissionGranted(requestCode);
         } else {
             if (!PermissionUtils.shouldShowRequestPermissionRationale(activity, permissions)) {
-                onPermissionListener.onPremissionNeverAskAgain(requestCode);
-//                String[] permissionsHint = activity.getResources().getStringArray(R.array.permissions);
-//                openSettingActivity(activity,  "Result" + permissionsHint[requestCode]);
+//                onPermissionListener.onPremissionNeverAskAgain(requestCode);
+                String[] permissionsHint = activity.getResources().getStringArray(R.array.permissions);
+                openSettingActivity(activity,  permissionsHint[requestCode]);
             } else {
                 onPermissionListener.onPremissionDenied(requestCode);
             }
         }
     }
 
+    /**
+     * 打开设置-应用-当前程序详情界面
+     *
+     * @param activity
+     * @param message
+     */
     private static void openSettingActivity(final Activity activity, String message) {
-
         showMessageOKCancel(activity, message, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

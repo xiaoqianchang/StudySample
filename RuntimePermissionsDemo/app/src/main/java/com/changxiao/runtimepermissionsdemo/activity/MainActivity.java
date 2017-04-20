@@ -3,17 +3,26 @@ package com.changxiao.runtimepermissionsdemo.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.changxiao.runtimepermissionsdemo.R;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = MainActivity.class.getSimpleName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        int widthPixels = getResources().getDisplayMetrics().widthPixels;
+        int heightPixels = getResources().getDisplayMetrics().heightPixels;
+        Toast.makeText(this, "widthPixels：" + widthPixels + ", heightPixels：" + heightPixels, Toast.LENGTH_LONG).show();
+        Log.d(TAG, "widthPixels：" + widthPixels + ", heightPixels：" + heightPixels);
     }
 
     @Override
