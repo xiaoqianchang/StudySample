@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="com.changxiao.coordinatorlayoutdemo.ScrollingActivity">
+    <item
+        android:id="@+id/action_scrolling_ist"
+        android:orderInCategory="100"
+        android:title="ScrollingListActivity"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_scrolling_tabLayout_list"
+        android:orderInCategory="100"
+        android:title="ScrollingTabLayoutListActivity"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_scrolling_header_tabLayout_list"
+        android:orderInCategory="100"
+        android:title="ScrollingHeaderTabLayoutListActivity"
+        app:showAsAction="never"/>
+</menu>
