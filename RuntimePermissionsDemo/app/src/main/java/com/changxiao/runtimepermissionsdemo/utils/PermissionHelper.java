@@ -4,23 +4,14 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.changxiao.runtimepermissionsdemo.R;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * android >=M 的权限申请统一处理
@@ -72,6 +63,16 @@ import static android.content.ContentValues.TAG;
  * notice:
  * 很多手机对原生系统做了修改，比如小米4的6.0的shouldShowRequestPermissionRationale
  * 就一直返回false，而且在申请权限时，如果用户选择了拒绝，则不会再弹出对话框了
+ *
+ * 针对于 shouldShowRequestPermissionRationale 方法返回值的情况 如下表格：
+ * 某个权限请求次数     系统权限框显示前(shouldShowRequestPermissionRationale返回值)    系统权限框显示后(shouldShowRequestPermissionRationale返回值)
+ * ---------------------------------------------------------------------------------------------------------------------------------------------
+ * first                false                                                           true
+ * second               true                                                            true
+ * 勾选不在提醒并拒绝     true                                                            false
+ * 再次请求权限           false                                                           false
+ *
+ * 第一次安装并且要请求某个权限：系统权限框显示前 onRequestPermissionsResult
  * <p>
  * Created by Chang.Xiao on 2016/11/22.
  *
@@ -80,52 +81,58 @@ import static android.content.ContentValues.TAG;
 
 public class PermissionHelper {
 
-    private static final String ATG = PermissionHelper.class.getSimpleName();
-    public static final int CODE_RECORD_AUDIO = 0;
-    public static final int CODE_GET_ACCOUNTS = 1;
-    public static final int CODE_READ_PHONE_STATE = 2;
-    public static final int CODE_CALL_PHONE = 3;
-    public static final int CODE_CAMERA = 4;
-    public static final int CODE_ACCESS_FINE_LOCATION = 5;
-    public static final int CODE_ACCESS_COARSE_LOCATION = 6;
-    public static final int CODE_READ_EXTERNAL_STORAGE = 7;
-    public static final int CODE_WRITE_EXTERNAL_STORAGE = 8;
+    private static final String TAG = PermissionHelper.class.getSimpleName();
+
+    /**
+     * permission_group code
+     */
+    public static final int CODE_CALENDAR = 0;
+    public static final int CODE_CAMERA = 1;
+    public static final int CODE_CONTACTS = 2;
+    public static final int CODE_LOCATION = 3;
+    public static final int CODE_MICROPHONE = 4;
+    public static final int CODE_PHONE = 5;
+    public static final int CODE_SENSORS = 6;
+    public static final int CODE_SMS = 7;
+    public static final int CODE_STORAGE = 8;
     public static final int CODE_MULTI_PERMISSION = 100;
 
-    public static final String PERMISSION_RECORD_AUDIO = Manifest.permission.RECORD_AUDIO;
-    public static final String PERMISSION_GET_ACCOUNTS = Manifest.permission.GET_ACCOUNTS;
-    public static final String PERMISSION_READ_PHONE_STATE = Manifest.permission.READ_PHONE_STATE;
-    public static final String PERMISSION_CALL_PHONE = Manifest.permission.CALL_PHONE;
+    public static final String PERMISSION_READ_CALENDAR = Manifest.permission.READ_CALENDAR;
     public static final String PERMISSION_CAMERA = Manifest.permission.CAMERA;
+    public static final String PERMISSION_GET_ACCOUNTS = Manifest.permission.GET_ACCOUNTS;
     public static final String PERMISSION_ACCESS_FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
-    public static final String PERMISSION_ACCESS_COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
+    public static final String PERMISSION_RECORD_AUDIO = Manifest.permission.RECORD_AUDIO;
+    public static final String PERMISSION_READ_PHONE_STATE = Manifest.permission.READ_PHONE_STATE;
+    public static final String PERMISSION_BODY_SENSORS = Manifest.permission.BODY_SENSORS;
+    public static final String PERMISSION_READ_SMS = Manifest.permission.READ_SMS;
     public static final String PERMISSION_READ_EXTERNAL_STORAGE = Manifest.permission.READ_EXTERNAL_STORAGE;
-    public static final String PERMISSION_WRITE_EXTERNAL_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
     private static final String[] requestPermissions = {
-            PERMISSION_RECORD_AUDIO,
-            PERMISSION_GET_ACCOUNTS,
-            PERMISSION_READ_PHONE_STATE,
-            PERMISSION_CALL_PHONE,
+            PERMISSION_READ_CALENDAR,
             PERMISSION_CAMERA,
+            PERMISSION_GET_ACCOUNTS,
             PERMISSION_ACCESS_FINE_LOCATION,
-            PERMISSION_ACCESS_COARSE_LOCATION,
+            PERMISSION_RECORD_AUDIO,
+            PERMISSION_READ_PHONE_STATE,
+            PERMISSION_BODY_SENSORS,
+            PERMISSION_READ_SMS,
             PERMISSION_READ_EXTERNAL_STORAGE,
-            PERMISSION_WRITE_EXTERNAL_STORAGE
     };
 
     /**
-     * Requests permission.
+     * 通过权限组请求权限
+     *
+     * 局限：当权限组中申请某个权限，而这个权限刚好没在manifest.xml中申请，而是同组的另外权限的话，该方法不可用。
      *
      * @param activity
-     * @param requestCode request code, e.g. if you need request CAMERA permission,parameters is PermissionHelper.CODE_CAMERA
+     * @param requestCode
+     * @param onPermissionListener
      */
     public static void requestPermission(final Activity activity, final int requestCode, OnPermissionListener onPermissionListener) {
         if (activity == null) {
             return;
         }
 
-        Log.i(TAG, "requestPermission requestCode:" + requestCode);
         if (requestCode < 0 || requestCode >= requestPermissions.length) {
             Log.w(TAG, "requestPermission illegal requestCode:" + requestCode);
             return;
@@ -133,7 +140,7 @@ public class PermissionHelper {
 
         final String requestPermission = requestPermissions[requestCode];
 
-        //如果是6.0以下的手机，ActivityCompat.checkSelfPermission()会始终等于PERMISSION_GRANTED，
+        // 如果是6.0以下的手机，ActivityCompat.checkSelfPermission()会始终等于PERMISSION_GRANTED，
         // 但是，如果用户关闭了你申请的权限，ActivityCompat.checkSelfPermission(),会导致程序崩溃(java.lang.RuntimeException: Unknown exception code: 1 msg null)，
         // 你可以使用try{}catch(){},处理异常，也可以在这个地方，低于23就什么都不做，
         // 个人建议try{}catch(){}单独处理，提示用户开启权限。
@@ -141,117 +148,70 @@ public class PermissionHelper {
         //            return;
         //        }
 
-        int checkSelfPermission;
-        try {
-            checkSelfPermission = ActivityCompat.checkSelfPermission(activity, requestPermission);
-        } catch (RuntimeException e) {
-            Toast.makeText(activity, "please open this permission", Toast.LENGTH_SHORT)
-                    .show();
-            Log.e(TAG, "RuntimeException:" + e.getMessage());
-            return;
-        }
-
-        if (checkSelfPermission != PackageManager.PERMISSION_GRANTED) {
-            Log.i(TAG, "ActivityCompat.checkSelfPermission != PackageManager.PERMISSION_GRANTED");
-            if (ActivityCompat.shouldShowRequestPermissionRationale(activity, requestPermission)) {
-                Log.i(TAG, "requestPermission shouldShowRequestPermissionRationale");
-                shouldShowRationale(activity, requestCode, requestPermission);
-            } else {
-                Log.d(TAG, "requestCameraPermission else");
-                ActivityCompat.requestPermissions(activity, new String[]{requestPermission}, requestCode);
-            }
-        } else {
-            Log.d(TAG, "ActivityCompat.checkSelfPermission ==== PackageManager.PERMISSION_GRANTED");
-            Toast.makeText(activity, "opened:" + requestPermissions[requestCode], Toast.LENGTH_SHORT).show();
+        if (PermissionUtils.hasSelfPermissions(activity, new String[] { requestPermission })) {
             onPermissionListener.onPermissionGranted(requestCode);
+        } else {
+            if (PermissionUtils.shouldShowRequestPermissionRationale(activity, new String[] { requestPermission })) {
+                showRationale(activity, requestCode, requestPermission);
+            } else {
+                ActivityCompat.requestPermissions(activity, new String[] { requestPermission }, requestCode);
+            }
         }
     }
 
-    private static void requestMultiResult(Activity activity, String[] permissions, int[] grantResults, OnPermissionListener onPermissionListener) {
+    /**
+     * 直接通过指定的权限名称请求权限
+     *
+     * @param activity
+     * @param onPermissionListener
+     * @param requestCode
+     * @param permissions Manifest.permission.WRITE_CONTACTS
+     */
+    public static void requestPermission(final Activity activity, OnPermissionListener onPermissionListener, final int requestCode, final String... permissions) {
         if (activity == null) {
             return;
         }
-
-        //TODO
-        Log.d(TAG, "onRequestPermissionsResult permissions length:" + permissions.length);
-        Map<String, Integer> perms = new HashMap<>();
-
-        ArrayList<String> notGranted = new ArrayList<>();
-        for (int i = 0; i < permissions.length; i++) {
-            Log.d(TAG, "permissions: [i]:" + i + ", permissions[i]" + permissions[i] + ",grantResults[i]:" + grantResults[i]);
-            perms.put(permissions[i], grantResults[i]);
-            if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                notGranted.add(permissions[i]);
+        if (PermissionUtils.hasSelfPermissions(activity, permissions)) {
+            onPermissionListener.onPermissionGranted(requestCode);
+        } else {
+            if (PermissionUtils.shouldShowRequestPermissionRationale(activity, permissions)) {
+                showRationale(activity, requestCode, permissions);
+            } else {
+                ActivityCompat.requestPermissions(activity, permissions, requestCode);
             }
         }
-
-        if (notGranted.size() == 0) {
-            Toast.makeText(activity, "all permission success" + notGranted, Toast.LENGTH_SHORT)
-                    .show();
-            onPermissionListener.onPermissionGranted(CODE_MULTI_PERMISSION);
-        } else {
-            openSettingActivity(activity, "those permission need granted!");
-        }
-
     }
-
 
     /**
-     * 一次申请多个权限
+     * show 基本原理
+     *
+     * @param activity
+     * @param requestCode
+     * @param requestPermission
      */
-    public static void requestMultiPermissions(final Activity activity, OnPermissionListener onPermissionListener) {
-
-        final List<String> permissionsList = getNoGrantedPermission(activity, false);
-        final List<String> shouldRationalePermissionsList = getNoGrantedPermission(activity, true);
-
-        //TODO checkSelfPermission
-        if (permissionsList == null || shouldRationalePermissionsList == null) {
-            return;
-        }
-        Log.d(TAG, "requestMultiPermissions permissionsList:" + permissionsList.size() + ",shouldRationalePermissionsList:" + shouldRationalePermissionsList.size());
-
-        if (permissionsList.size() > 0) {
-            ActivityCompat.requestPermissions(activity, permissionsList.toArray(new String[permissionsList.size()]),
-                    CODE_MULTI_PERMISSION);
-            Log.d(TAG, "showMessageOKCancel requestPermissions");
-
-        } else if (shouldRationalePermissionsList.size() > 0) {
-            showMessageOKCancel(activity, "should open those permission",
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(activity, shouldRationalePermissionsList.toArray(new String[shouldRationalePermissionsList.size()]),
-                                    CODE_MULTI_PERMISSION);
-                            Log.d(TAG, "showMessageOKCancel requestPermissions");
-                        }
-                    });
-        } else {
-            onPermissionListener.onPermissionGranted(CODE_MULTI_PERMISSION);
-        }
-
-    }
-
-
-    private static void shouldShowRationale(final Activity activity, final int requestCode, final String requestPermission) {
-        //TODO
+    private static void showRationale(final Activity activity, final int requestCode, final String... requestPermission) {
         String[] permissionsHint = activity.getResources().getStringArray(R.array.permissions);
         showMessageOKCancel(activity, "Rationale: " + permissionsHint[requestCode], new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ActivityCompat.requestPermissions(activity,
-                        new String[]{requestPermission},
-                        requestCode);
-                Log.d(TAG, "showMessageOKCancel requestPermissions:" + requestPermission);
+                ActivityCompat.requestPermissions(activity, requestPermission, requestCode);
             }
         });
     }
 
+    /**
+     * 显示自己定义的权限提示 Dialog
+     *
+     * @param context
+     * @param message
+     * @param okListener
+     */
     private static void showMessageOKCancel(final Activity context, String message, DialogInterface.OnClickListener okListener) {
         new AlertDialog.Builder(context)
                 .setMessage(message)
                 .setPositiveButton("OK", okListener)
                 .setNegativeButton("Cancel", null)
-                .create()
+                .setCancelable(false)
                 .show();
 
     }
@@ -262,45 +222,41 @@ public class PermissionHelper {
      * @param permissions
      * @param grantResults
      */
-    public static void requestPermissionsResult(final Activity activity, final int requestCode, @NonNull String[] permissions,
+    public static void onRequestPermissionsResult(final Activity activity, final int requestCode, @NonNull String[] permissions,
                                                 @NonNull int[] grantResults, OnPermissionListener onPermissionListener) {
-
         if (activity == null) {
-            return;
-        }
-        Log.d(TAG, "requestPermissionsResult requestCode:" + requestCode);
-
-        if (requestCode == CODE_MULTI_PERMISSION) {
-            requestMultiResult(activity, permissions, grantResults, onPermissionListener);
             return;
         }
 
         if (requestCode < 0 || requestCode >= requestPermissions.length) {
             Log.w(TAG, "requestPermissionsResult illegal requestCode:" + requestCode);
-            Toast.makeText(activity, "illegal requestCode:" + requestCode, Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Log.i(TAG, "onRequestPermissionsResult requestCode:" + requestCode + ",permissions:" + permissions.toString()
-                + ",grantResults:" + grantResults.toString() + ",length:" + grantResults.length);
-
-        if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.i(TAG, "onRequestPermissionsResult PERMISSION_GRANTED");
-            //TODO success, do something, can use callback
-            onPermissionListener.onPermissionGranted(requestCode);
-
-        } else {
-            //TODO hint user this permission function
-            Log.i(TAG, "onRequestPermissionsResult PERMISSION NOT GRANTED");
-            //TODO
-            String[] permissionsHint = activity.getResources().getStringArray(R.array.permissions);
-            openSettingActivity(activity,  "Result" + permissionsHint[requestCode]);
+        if (PermissionUtils.getTargetSdkVersion(activity) < 23 && !PermissionUtils.hasSelfPermissions(activity, permissions)) {
+            onPermissionListener.onPremissionDenied(requestCode);
+            return;
         }
-
+        if (PermissionUtils.verifyPermissions(grantResults)) {
+            onPermissionListener.onPermissionGranted(requestCode);
+        } else {
+            if (!PermissionUtils.shouldShowRequestPermissionRationale(activity, permissions)) {
+                onPermissionListener.onPremissionNeverAskAgain(requestCode);
+                String[] permissionsHint = activity.getResources().getStringArray(R.array.permissions);
+                openSettingActivity(activity,  permissionsHint[requestCode]);
+            } else {
+                onPermissionListener.onPremissionDenied(requestCode);
+            }
+        }
     }
 
+    /**
+     * 打开设置-应用-当前程序详情界面
+     *
+     * @param activity
+     * @param message
+     */
     private static void openSettingActivity(final Activity activity, String message) {
-
         showMessageOKCancel(activity, message, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -314,56 +270,9 @@ public class PermissionHelper {
         });
     }
 
-
-    /**
-     * @param activity
-     * @param isShouldRationale true: return no granted and shouldShowRequestPermissionRationale permissions, false:return no granted and !shouldShowRequestPermissionRationale
-     * @return
-     */
-    public static ArrayList<String> getNoGrantedPermission(Activity activity, boolean isShouldRationale) {
-
-        ArrayList<String> permissions = new ArrayList<>();
-
-        for (int i = 0; i < requestPermissions.length; i++) {
-            String requestPermission = requestPermissions[i];
-
-
-            //TODO checkSelfPermission
-            int checkSelfPermission = -1;
-            try {
-                checkSelfPermission = ActivityCompat.checkSelfPermission(activity, requestPermission);
-            } catch (RuntimeException e) {
-                Toast.makeText(activity, "please open those permission", Toast.LENGTH_SHORT)
-                        .show();
-                Log.e(TAG, "RuntimeException:" + e.getMessage());
-                return null;
-            }
-
-            if (checkSelfPermission != PackageManager.PERMISSION_GRANTED) {
-                Log.i(TAG, "getNoGrantedPermission ActivityCompat.checkSelfPermission != PackageManager.PERMISSION_GRANTED:" + requestPermission);
-
-                if (ActivityCompat.shouldShowRequestPermissionRationale(activity, requestPermission)) {
-                    Log.d(TAG, "shouldShowRequestPermissionRationale if");
-                    if (isShouldRationale) {
-                        permissions.add(requestPermission);
-                    }
-
-                } else {
-
-                    if (!isShouldRationale) {
-                        permissions.add(requestPermission);
-                    }
-                    Log.d(TAG, "shouldShowRequestPermissionRationale else");
-                }
-
-            }
-        }
-
-        return permissions;
-    }
-
     public interface OnPermissionListener {
         void onPermissionGranted(int requestCode);
         void onPremissionDenied(int requestCode);
+        void onPremissionNeverAskAgain(int requestCode);
     }
 }
