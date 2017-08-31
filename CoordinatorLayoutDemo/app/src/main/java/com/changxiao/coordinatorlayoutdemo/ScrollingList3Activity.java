@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import com.changxiao.coordinatorlayoutdemo.fragment.FragmentOne;
 import com.changxiao.coordinatorlayoutdemo.fragment.FragmentThree;
 import com.changxiao.coordinatorlayoutdemo.fragment.FragmentTwo;
+import com.changxiao.coordinatorlayoutdemo1.R;
 
 public class ScrollingList3Activity extends AppCompatActivity {
 

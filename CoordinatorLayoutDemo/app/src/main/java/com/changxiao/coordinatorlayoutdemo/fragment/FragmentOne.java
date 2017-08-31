@@ -11,7 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.changxiao.coordinatorlayoutdemo.R;
+import com.changxiao.coordinatorlayoutdemo1.R;
+
 
 /**
  * A simple {@link Fragment} subclass.

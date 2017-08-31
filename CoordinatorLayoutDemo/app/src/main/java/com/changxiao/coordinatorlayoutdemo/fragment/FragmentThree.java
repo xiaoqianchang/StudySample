@@ -7,7 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.changxiao.coordinatorlayoutdemo.R;
+import com.changxiao.coordinatorlayoutdemo1.R;
+
 
 /**
  * A simple {@link Fragment} subclass.

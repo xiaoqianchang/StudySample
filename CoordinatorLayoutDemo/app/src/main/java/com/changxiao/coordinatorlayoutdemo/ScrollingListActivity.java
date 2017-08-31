@@ -8,6 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.changxiao.coordinatorlayoutdemo1.R;
+
 /**
  * 要让listview/gridview一起滚动，需设置ViewCompat.setNestedScrollingEnabled(listView/gridview,true);
  *
