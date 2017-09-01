@@ -1,14 +1,11 @@
 package com.changxiao.coordinatorlayoutdemo;
 
-import android.os.Build;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
-import com.changxiao.coordinatorlayoutdemo1.R;
 
 /**
  * 要让listview/gridview一起滚动，需设置ViewCompat.setNestedScrollingEnabled(listView/gridview,true);

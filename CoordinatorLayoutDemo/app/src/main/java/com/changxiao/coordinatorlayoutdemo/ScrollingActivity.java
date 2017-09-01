@@ -10,7 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 
-import com.changxiao.coordinatorlayoutdemo1.R;
+import com.changxiao.coordinatorlayoutdemo.panel.PanelActivity;
 
 public class ScrollingActivity extends AppCompatActivity {
 
@@ -55,6 +55,9 @@ public class ScrollingActivity extends AppCompatActivity {
             case R.id.action_scrolling_header_tabLayout_list:
                 startActivity(new Intent(this, ScrollingList3Activity.class));
                 return true;
+            case R.id.action_panel:
+                startActivity(new Intent(this, PanelActivity.class));
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

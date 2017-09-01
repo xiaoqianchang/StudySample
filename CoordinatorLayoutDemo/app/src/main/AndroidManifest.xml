@@ -24,6 +24,8 @@
         </activity>
         <activity android:name=".ScrollingList3Activity">
         </activity>
+        <activity android:name=".panel.PanelActivity">
+        </activity>
     </application>
 
 </manifest>

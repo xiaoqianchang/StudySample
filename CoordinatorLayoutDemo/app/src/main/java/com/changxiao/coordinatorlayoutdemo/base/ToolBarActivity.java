@@ -10,7 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.changxiao.coordinatorlayoutdemo.utils.SystemUtils;
-import com.changxiao.coordinatorlayoutdemo1.R;
+import com.changxiao.coordinatorlayoutdemo.R;
 
 import butterknife.BindView;
 
