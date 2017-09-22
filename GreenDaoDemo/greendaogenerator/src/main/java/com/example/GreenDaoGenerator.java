@@ -27,9 +27,9 @@ public class GreenDaoGenerator {
         // 一个实体类对应一张数据库表，此处表名为 PERSON （即类名）
         Entity person = schema.addEntity("Person");
         // 也可以重新命名表名
-        // person.setTableName("People");
+         person.setTableName("people");
         // 定义一个主键
-        person.addIdProperty().primaryKey();
+        person.addIdProperty();
         // 定义一个非空的列，列名为 NAME
         person.addStringProperty("name").notNull();
         // 可以使用此方法定义实体类的属性名和数据库的列名不同，如下实体类名为 sex，列名为_SEX

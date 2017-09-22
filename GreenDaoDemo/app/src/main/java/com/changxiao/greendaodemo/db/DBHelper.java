@@ -22,7 +22,7 @@ import org.greenrobot.greendao.database.Database;
 public class DBHelper extends DaoMaster.OpenHelper {
 
     /** A flag to show how easily you can switch from standard SQLite to the encrypted SQLCipher. */
-    public static final boolean ENCRYPTED = true;
+    public static final boolean ENCRYPTED = false;
 
     private static DBHelper mInstance;
 

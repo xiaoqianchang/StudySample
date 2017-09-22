@@ -9,26 +9,30 @@
 
     <TextView
         android:id="@+id/tv_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:gravity="center"
         android:text="add"/>
 
     <TextView
         android:id="@+id/tv_delete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:gravity="center"
         android:text="delete"/>
 
     <TextView
         android:id="@+id/tv_update"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:gravity="center"
         android:text="update"/>
 
     <TextView
         android:id="@+id/tv_query"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:gravity="center"
         android:text="query"/>
 
 </LinearLayout>
