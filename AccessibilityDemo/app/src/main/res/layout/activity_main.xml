@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/active_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="ActiveButton"
+        android:textAllCaps="false"/>
+
+    <Button
+        android:id="@+id/install_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="InstallButton"
+        android:textAllCaps="false"/>
+
+    <Button
+        android:id="@+id/uninstall_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="UninstallButton"
+        android:textAllCaps="false"/>
+
+    <Button
+        android:id="@+id/kill_app_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="KillAppButton"
+        android:textAllCaps="false"/>
+
+</LinearLayout>
