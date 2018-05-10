@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">AccessibilityDemo</string>
-    <string name="accessibility_service_description">安装、卸载、强行停止功能</string>
-    <string name="accessibility_service_label">Accessibility</string>
+    <string name="accessibility_service_description">智能安装服务，无需用户的任何操作就可以自动安装程序。</string>
+    <string name="accessibility_service_label">智能安装</string>
 </resources>

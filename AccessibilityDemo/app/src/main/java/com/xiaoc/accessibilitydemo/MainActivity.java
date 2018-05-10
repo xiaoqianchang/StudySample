@@ -109,7 +109,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void installApk() {
-        String outFilePath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + TARGET_APP_NAME;
+        String outFilePath = Environment.getExternalStorageDirectory().getAbsolutePath() +
+                File.separator + "Download/" + TARGET_APP_NAME;
         File installFile = new File(outFilePath);
         if(installFile.exists()){
             installFile.delete();

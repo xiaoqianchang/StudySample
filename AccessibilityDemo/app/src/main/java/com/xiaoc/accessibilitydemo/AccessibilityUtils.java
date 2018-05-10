@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.Settings;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.widget.Toast;
@@ -101,6 +103,20 @@ public class AccessibilityUtils {
         return false;
     }
 
+    /**
+     * 安装apk
+     *
+     * packageURI = Uri.fromFile(new File(filePath));
+     *             if (packageURI != null) {
+     *                 Intent installIntent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
+     *                 installIntent.setData(packageURI);
+     *                 installIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+     *                 mContext.startActivity(installIntent);
+     *             }
+     *
+     * @param filePath
+     * @param packageName
+     */
     public void inStallApp(String filePath, String packageName) {
         if (!isAccessibilitySettingsOn()) {
             Toast.makeText(mContext, "辅助服务未开启，安装应用失败",
@@ -110,16 +126,23 @@ public class AccessibilityUtils {
         // 如果Apk没有安装，则执行安装逻辑
         if(!isApkInstalled(packageName)) {
             MyAccessibilityService.INVOKE_TYPE = MyAccessibilityService.TYPE_INSTALL_APP;
-//            Intent intent = new Intent(Intent.ACTION_VIEW);
-//            intent.setDataAndType(Uri.fromFile(new File(filePath)), "application/vnd.android.package-archive");
-//            mContext.startActivity(intent);
-            Uri packageURI = Uri.fromFile(new File(filePath));
-            if (packageURI != null) {
-                Intent installIntent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
-                installIntent.setData(packageURI);
-                installIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                mContext.startActivity(installIntent);
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+
+            Uri packageURI = null;
+            // 版本在7.0以上是不能直接通过uri访问的
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                File file = new File(filePath);
+                // 由于没有在Activity环境下启动Activity,设置下面的标签
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                // 参数1 上下文, 参数2 Provider主机地址 和配置文件中保持一致   参数3  共享的文件
+                packageURI = FileProvider.getUriForFile(mContext, "com.xiaoc.accessibilitydemo", file);
+                // 添加这一句表示对目标应用临时授权该Uri所代表的文件
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            } else {
+                packageURI = Uri.fromFile(new File(filePath));
             }
+            intent.setDataAndType(packageURI, "application/vnd.android.package-archive");
+            mContext.startActivity(intent);
         } else {
             Toast.makeText(mContext, "应用已安装", Toast.LENGTH_SHORT).show();
         }

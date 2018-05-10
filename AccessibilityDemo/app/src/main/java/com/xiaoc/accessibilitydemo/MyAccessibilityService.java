@@ -81,6 +81,7 @@ public class MyAccessibilityService extends AccessibilityService {
      */
     private void processInstallApplication(AccessibilityEvent event) {
         // 找到界面需要处理的控件
+        findAndPerformActions(event, "开启"); // 针对系统有设置“禁止安装”来源不明的应用 的弹框
         findAndPerformActions(event, "安装");
         findAndPerformActions(event, "下一步");
         findAndPerformActions(event, "完成");
@@ -108,7 +109,27 @@ public class MyAccessibilityService extends AccessibilityService {
         if (event.getSource() != null) {
             // 判断当前界面为安装界面
             boolean isInstallPage = event.getPackageName().equals("com.android.packageinstaller");
-            if (isInstallPage) { // 安装界面
+            if (isInstallPage) { // 系统安装界面
+                CharSequence className = event.getClassName();
+               if (className.equals("com.android.packageinstaller.UninstallerActivity")) {
+                    // 卸载
+                    // 根据文本遍历当前视图树是否包含text文字属性，找到所有包含目标文字的节点(注意，
+                    // 这里是包含目标文字，而非完全与目标文字相同)，之后再遍历这个列表
+                    List<AccessibilityNodeInfo> action_nodes = getRootInActiveWindow().findAccessibilityNodeInfosByText(text);
+                    if (action_nodes != null && !action_nodes.isEmpty()) {
+                        AccessibilityNodeInfo node = null;
+                        for (int i = 0; i < action_nodes.size(); i++) {
+                            node = action_nodes.get(i);
+                            // 执行按钮点击行为
+                            if ((node.getClassName().equals("android.widget.Button")
+                                    || node.getClassName().equals("android.widget.TextView")) // 某些按钮是Textview
+                                    && node.isEnabled()) {
+                                node.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                            }
+                        }
+                    }
+                }
+                // 安装
                 // 根据文本遍历当前视图树是否包含text文字属性，找到所有包含目标文字的节点(注意，
                 // 这里是包含目标文字，而非完全与目标文字相同)，之后再遍历这个列表
                 List<AccessibilityNodeInfo> action_nodes = event.getSource().findAccessibilityNodeInfosByText(text);
@@ -117,7 +138,9 @@ public class MyAccessibilityService extends AccessibilityService {
                     for (int i = 0; i < action_nodes.size(); i++) {
                         node = action_nodes.get(i);
                         // 执行按钮点击行为
-                        if (node.getClassName().equals("android.widget.Button") && node.isEnabled()) {
+                        if ((node.getClassName().equals("android.widget.Button")
+                                || node.getClassName().equals("android.widget.TextView")) // 某些按钮是Textview
+                                && node.isEnabled()) {
                             node.performAction(AccessibilityNodeInfo.ACTION_CLICK);
                         }
                     }
@@ -134,6 +157,10 @@ public class MyAccessibilityService extends AccessibilityService {
     private void processKillApplication(AccessibilityEvent event) {
         if (event.getSource() != null) {
             if (event.getPackageName().equals("com.android.settings")) {
+//                CharSequence className = event.getClassName();
+//                if (className.equals("com.android.settings.applications.InstalledAppDetailsTop")) {
+//
+//                }
                 List<AccessibilityNodeInfo> stop_nodes = event.getSource().findAccessibilityNodeInfosByText("强行停止");
                 if (stop_nodes!=null && !stop_nodes.isEmpty()) {
                     AccessibilityNodeInfo node;
