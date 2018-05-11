@@ -47,11 +47,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         initView();
         initListener();
-        AccessibilityUtils.init(this, LOCAL_PACKAGE_NAME, SERVICE_NAME);
+        AccessibilityUtils.getInstance().init(this, LOCAL_PACKAGE_NAME, SERVICE_NAME);
         grantedPermission();
-        if (!AccessibilityUtils.getInstance().isAccessibilitySettingsOn()) {
-            AccessibilityUtils.getInstance().popOpenAlertDialog(this);
-        }
+//        if (!AccessibilityUtils.getInstance().isAccessibilitySettingsOn()) {
+//            AccessibilityUtils.getInstance().popOpenAlertDialog(this);
+//        }
     }
 
     private void initView() {

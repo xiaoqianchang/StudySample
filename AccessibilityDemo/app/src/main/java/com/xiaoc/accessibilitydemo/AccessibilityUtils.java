@@ -1,5 +1,6 @@
 package com.xiaoc.accessibilitydemo;
 
+import android.accessibilityservice.AccessibilityServiceInfo;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.provider.Settings;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.view.accessibility.AccessibilityManager;
 import android.widget.Toast;
 
 import java.io.File;
@@ -26,9 +28,10 @@ import java.util.List;
 public class AccessibilityUtils {
 
     private static AccessibilityUtils accessibilityUtils;
-    private static Context mContext;
-    private static String mLocalPackageName;
-    private static String mAccessibilityClassAbsolutePath;
+    private Context mContext;
+    private String mLocalPackageName;
+    private String mAccessibilityClassAbsolutePath;
+    private AccessibilityManager mAccessibilityManager;
 
     /**
      * 初始化
@@ -37,10 +40,11 @@ public class AccessibilityUtils {
      * @param localPackageName  本应用包名
      * @param accessibilityClassAbsolutePath    辅助服务类绝对路径
      */
-    public static void init(Context context, String localPackageName, String accessibilityClassAbsolutePath) {
+    public void init(Context context, String localPackageName, String accessibilityClassAbsolutePath) {
         mContext = context.getApplicationContext();
         mLocalPackageName = localPackageName;
         mAccessibilityClassAbsolutePath = accessibilityClassAbsolutePath;
+        mAccessibilityManager = (AccessibilityManager) mContext.getSystemService(Context.ACCESSIBILITY_SERVICE);
     }
 
     public static AccessibilityUtils getInstance() {
@@ -83,6 +87,23 @@ public class AccessibilityUtils {
             e.printStackTrace();
         }
         return isAccessibilityOn;
+    }
+
+    /**
+     * Check当前辅助服务是否启用
+     *
+     * @param serviceName serviceName
+     * @return 是否启用
+     */
+    private boolean checkAccessibilityEnabled(String serviceName) {
+        List<AccessibilityServiceInfo> accessibilityServices =
+                mAccessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC);
+        for (AccessibilityServiceInfo info : accessibilityServices) {
+            if (info.getId().equals(serviceName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
