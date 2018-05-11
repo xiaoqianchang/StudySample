@@ -107,19 +107,16 @@ public class MyAccessibilityService extends AccessibilityService {
 //        findAndPerformActions(event, "确认");
 //        findAndPerformActions(event, "卸载");
 
-        AccessibilityNodeInfo nodeInfo = event.getSource();
-        if (nodeInfo != null) {
-            // 判断当前界面为安装界面
-            if (event.getPackageName().equals("com.android.packageinstaller")) { // 系统安装界面
-                CharSequence className = event.getClassName();
-                if (className.equals("com.android.packageinstaller.UninstallerActivity")) {
-                    // 卸载
-                    // 根据文本遍历当前视图树是否包含text文字属性，找到所有包含目标文字的节点(注意，
-                    // 这里是包含目标文字，而非完全与目标文字相同)，之后再遍历这个列表
-                    findAndPerformActions(event, "确定", "确认", "卸载");
-                }
-            }
-        }
+        findAndPerformActions(event, "确定", "确认", "卸载");
+    }
+
+    /**
+     * 杀死进程
+     *
+     * @param event
+     */
+    private void processKillApplication(AccessibilityEvent event) {
+        findAndPerformActions(event, "强行停止", "确定");
     }
 
     /**
@@ -128,6 +125,7 @@ public class MyAccessibilityService extends AccessibilityService {
      * @param event
      * @param text
      */
+    @Deprecated
     private void findAndPerformActions(AccessibilityEvent event, String text) {
         AccessibilityNodeInfo nodeInfo = event.getSource();
         if (nodeInfo != null) {
@@ -274,14 +272,5 @@ public class MyAccessibilityService extends AccessibilityService {
             }
         }
         return false;
-    }
-
-    /**
-     * 杀死进程
-     *
-     * @param event
-     */
-    private void processKillApplication(AccessibilityEvent event) {
-        findAndPerformActions(event, "强行停止", "确定");
     }
 }
