@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final String SERVICE_NAME = "com.xiaoc.accessibilitydemo.MyAccessibilityService";
 
     // 操作目标
-    private final String TARGET_APP_NAME = "app-debug.apk";
+    private final String TARGET_APP_NAME = "yingyongbao.apk"; // app-debug
     private final String TARGET_PACKAGE_NAME = "com.changxiao.draggablecircledemo";
 
     private Button activeBtn;

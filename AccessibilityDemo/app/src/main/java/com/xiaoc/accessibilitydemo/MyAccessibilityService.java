@@ -21,7 +21,7 @@ public class MyAccessibilityService extends AccessibilityService {
 
     private static final String TAG = MyAccessibilityService.class.getSimpleName();
 
-    public static int INVOKE_TYPE = 0;
+    public static int INVOKE_TYPE = 2;
     public static final int TYPE_KILL_APP = 1;
     public static final int TYPE_INSTALL_APP = 2;
     public static final int TYPE_UNINSTALL_APP = 3;
@@ -39,6 +39,15 @@ public class MyAccessibilityService extends AccessibilityService {
                 accessibilityEvent.getPackageName() + ", eventType=" +
                 accessibilityEvent.eventTypeToString(accessibilityEvent.getEventType()));
         processAccessibilityEvent(accessibilityEvent);
+        // 第二种方式实现安装
+//        AccessibilityNodeInfo nodeInfo = accessibilityEvent.getSource();
+//        if (nodeInfo != null) {
+//            int eventType = accessibilityEvent.getEventType();
+//            if (eventType== AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED ||
+//                    eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+//                boolean handled = iterateNodesAndHandle(nodeInfo, "继续", "开启", "安装", "下一步", "完成");
+//            }
+//        }
     }
 
     /**
@@ -55,7 +64,6 @@ public class MyAccessibilityService extends AccessibilityService {
             int eventType = event.getEventType();
             if (eventType== AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED ||
                     eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-                // 有两个同时都被触发的可能，为了防止二次处理的情况，这里我们使用了一个Map来过滤掉重复事件。
                 switch (INVOKE_TYPE) {
                     case TYPE_KILL_APP:
                         processKillApplication(event);
@@ -93,7 +101,7 @@ public class MyAccessibilityService extends AccessibilityService {
 //        findAndPerformActions(event, "下一步");
 //        findAndPerformActions(event, "完成");
 
-        findAndPerformActions(event, "开启", "安装", "下一步", "完成");
+        findAndPerformActions(event, "继续", "开启", "安装", "下一步", "完成");
     }
 
     /**
@@ -204,6 +212,7 @@ public class MyAccessibilityService extends AccessibilityService {
                             }
                         }
                     }
+                    return;
                 }
                 // 安装
                 // 根据文本遍历当前视图树是否包含text文字属性，找到所有包含目标文字的节点(注意，
@@ -266,7 +275,7 @@ public class MyAccessibilityService extends AccessibilityService {
             }
             for (int i = 0; i < childCount; i++) {
                 AccessibilityNodeInfo childNodeInfo = nodeInfo.getChild(i);
-                if (iterateNodesAndHandle(childNodeInfo)) {
+                if (iterateNodesAndHandle(childNodeInfo, "继续", "开启", "安装", "下一步", "完成")) {
                     return true;
                 }
             }
