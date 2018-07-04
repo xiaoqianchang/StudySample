@@ -1,2 +1,2 @@
 # StudySample
-A library about study. 
+A library about study.
