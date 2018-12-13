@@ -1,4 +1,4 @@
-package com.changxiao.runtimepermissionsdemo.activity;
+package com.changxiao.runtimepermissionsdemo;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -8,7 +8,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.changxiao.runtimepermissionsdemo.R;
+import com.changxiao.runtimepermissionsdemo.normal.activity.ContactsActivity;
+import com.changxiao.runtimepermissionsdemo.normal.activity.PermissionActivity;
+import com.changxiao.runtimepermissionsdemo.permissionsdispatcher.activity.PermissionsDispatcherActivity;
+import com.changxiao.runtimepermissionsdemo.rxpermissions.activity.RxPermissionsActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,14 +45,23 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = null;
         //noinspection SimplifiableIfStatement
         switch (id) {
-            case R.id.action_permissionActivity:
+            case R.id.action_normal:
                 intent = new Intent(this, PermissionActivity.class);
                 break;
             case R.id.action_contacts:
                 intent = new Intent(this, ContactsActivity.class);
                 break;
+            case R.id.action_permissions_dispatcher:
+                intent = new Intent(this, PermissionsDispatcherActivity.class);
+                break;
+            case R.id.action_rx_permissions:
+                intent = new Intent(this, RxPermissionsActivity.class);
+                break;
         }
-        startActivity(intent);
+        try {
+            startActivity(intent);
+        } catch (Exception e) {
+        }
 
         return super.onOptionsItemSelected(item);
     }

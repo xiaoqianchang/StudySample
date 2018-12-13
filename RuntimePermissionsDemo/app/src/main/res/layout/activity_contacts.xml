@@ -5,6 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.changxiao.runtimepermissionsdemo.activity.ContactsActivity">
+    tools:context="com.changxiao.runtimepermissionsdemo.normal.activity.ContactsActivity">
 
 </android.support.constraint.ConstraintLayout>

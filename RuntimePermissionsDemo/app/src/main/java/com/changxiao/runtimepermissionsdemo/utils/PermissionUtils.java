@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Process;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.AppOpsManagerCompat;
 import android.support.v4.util.SimpleArrayMap;
 
 import static android.support.v4.content.PermissionChecker.checkSelfPermission;
@@ -106,11 +108,24 @@ public final class PermissionUtils {
      * @see #hasSelfPermissions(Context, String...)
      */
     private static boolean hasSelfPermission(Context context, String permission) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && "Xiaomi".equalsIgnoreCase(Build.MANUFACTURER)) {
+            return hasSelfPermissionForXiaomi(context, permission);
+        }
         try {
             return checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED;
         } catch (RuntimeException t) {
             return false;
         }
+    }
+
+    private static boolean hasSelfPermissionForXiaomi(Context context, String permission) {
+        String permissionToOp = AppOpsManagerCompat.permissionToOp(permission);
+        if (permissionToOp == null) {
+            // in case of normal permissions(e.g. INTERNET)
+            return true;
+        }
+        int noteOp = AppOpsManagerCompat.noteOp(context, permissionToOp, Process.myUid(), context.getPackageName());
+        return noteOp == AppOpsManagerCompat.MODE_ALLOWED && checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED;
     }
 
     /**

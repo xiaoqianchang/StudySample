@@ -1,4 +1,4 @@
-package com.changxiao.runtimepermissionsdemo.activity;
+package com.changxiao.runtimepermissionsdemo.normal.activity;
 
 import android.Manifest;
 import android.content.ContentProviderOperation;

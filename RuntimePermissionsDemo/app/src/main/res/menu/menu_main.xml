@@ -3,7 +3,7 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_permissionActivity"
+        android:id="@+id/action_normal"
         android:orderInCategory="100"
         android:title="PermissionActivity"
         app:showAsAction="never" />
@@ -13,4 +13,16 @@
         android:orderInCategory="100"
         android:title="Contacts"
         app:showAsAction="never" />
+
+    <item
+      android:id="@+id/action_permissions_dispatcher"
+      android:orderInCategory="100"
+      android:title="PermissionsDispatcher"
+      app:showAsAction="never" />
+
+    <item
+      android:id="@+id/action_rx_permissions"
+      android:orderInCategory="100"
+      android:title="RxPermissions"
+      app:showAsAction="never" />
 </menu>

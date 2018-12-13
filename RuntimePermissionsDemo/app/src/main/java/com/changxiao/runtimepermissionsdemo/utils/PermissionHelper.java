@@ -73,6 +73,15 @@ import com.changxiao.runtimepermissionsdemo.R;
  * 再次请求权限           false                                                           false
  *
  * 第一次安装并且要请求某个权限：系统权限框显示前 onRequestPermissionsResult
+ *
+ * 总结为：
+ * 1、APP没有申请这个权限的话，返回false
+ * 2、用户拒绝时，勾选了不再提示的话，返回false
+ * 3、用户拒绝，但是没有勾选不再提示的话，返回true
+ * 因此如果想在第一次就给用户提示，需要记录权限是否申请过，没有申请过的话，强制弹窗提示，而不能根据这个方法的返回值来。
+ *
+ * 异常情况：
+ * 1、魅族上checkSelfPermission一直返回0即hasSelfPermissions一直为true，参考 https://bbs.meizu.cn/thread-7065062-1-1.html
  * <p>
  * Created by Chang.Xiao on 2016/11/22.
  *
