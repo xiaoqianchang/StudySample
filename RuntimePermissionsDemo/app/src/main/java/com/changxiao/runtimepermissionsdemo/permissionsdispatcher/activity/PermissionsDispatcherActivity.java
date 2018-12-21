@@ -23,7 +23,7 @@ import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 
 /**
- * PermissionsDispatcher 使用方式
+ * PermissionsDispatcher 使用方式（和原生api实现最接近，每一步都可以回调监控）
  *
  * @RuntimePermissions  注解在其内部需要使用运行时权限的Activity或Fragment上
  * @NeedsPermission 注解在需要调用运行时权限的方法上，当用户给予权限时会执行该方法

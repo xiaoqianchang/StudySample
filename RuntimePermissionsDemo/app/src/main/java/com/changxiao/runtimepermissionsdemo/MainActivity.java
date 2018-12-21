@@ -8,6 +8,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.changxiao.runtimepermissionsdemo.andpermission.AndPermissionActivity;
+import com.changxiao.runtimepermissionsdemo.easypermissions.activity.EasyPermissionsActivity;
 import com.changxiao.runtimepermissionsdemo.normal.activity.ContactsActivity;
 import com.changxiao.runtimepermissionsdemo.normal.activity.PermissionActivity;
 import com.changxiao.runtimepermissionsdemo.permissionsdispatcher.activity.PermissionsDispatcherActivity;
@@ -56,6 +58,12 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.action_rx_permissions:
                 intent = new Intent(this, RxPermissionsActivity.class);
+                break;
+            case R.id.action_easy_permissions:
+                intent = new Intent(this, EasyPermissionsActivity.class);
+                break;
+            case R.id.action_and_permission:
+                intent = new Intent(this, AndPermissionActivity.class);
                 break;
         }
         try {

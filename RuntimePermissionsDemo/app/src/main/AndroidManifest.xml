@@ -2,6 +2,23 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.changxiao.runtimepermissionsdemo">
 
+  <!-- 允许程序访问网络连接，可能产生GPRS流量 MIPush 必须权限 -->
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <!-- 允许程序获取网络信息状态，如当前的网络连接是否有效 -->
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+  <!-- 允许程序获取当前WiFi接入的状态以及WLAN热点的信 -->
+  <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+  <!-- 允许程序改变WiFi状态 -->
+  <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+  <!-- 允许程序振动 -->
+  <uses-permission android:name="android.permission.VIBRATE"/>
+  <!-- 允许访问闪光灯 -->
+  <uses-permission android:name="android.permission.FLASHLIGHT"/>
+
+  <!-- 允许一个程序获取信息有关当前或最近运行的任务，一个缩略的任务状态，是否活动等等 -->
+  <uses-permission android:name="android.permission.GET_TASKS"/>
+
+  <!-- Android6.0 Dangerous permissions and permission groups(危险权限和权限组) -->
   <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
   <uses-permission android:name="android.permission.READ_CONTACTS"/>
   <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
@@ -45,6 +62,10 @@
     <activity android:name=".permissionsdispatcher.activity.PermissionsDispatcherActivity">
     </activity>
     <activity android:name=".rxpermissions.activity.RxPermissionsActivity">
+    </activity>
+    <activity android:name=".easypermissions.activity.EasyPermissionsActivity">
+    </activity>
+    <activity android:name=".andpermission.AndPermissionActivity">
     </activity>
   </application>
 

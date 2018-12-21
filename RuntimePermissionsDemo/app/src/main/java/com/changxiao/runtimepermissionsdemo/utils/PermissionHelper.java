@@ -82,6 +82,10 @@ import com.changxiao.runtimepermissionsdemo.R;
  *
  * 异常情况：
  * 1、魅族上checkSelfPermission一直返回0即hasSelfPermissions一直为true，参考 https://bbs.meizu.cn/thread-7065062-1-1.html
+ *
+ * 参考：
+ * https://testerhome.com/topics/5181
+ * https://juejin.im/post/59e01ece51882578c6736db7
  * <p>
  * Created by Chang.Xiao on 2016/11/22.
  *
@@ -250,6 +254,7 @@ public class PermissionHelper {
             onPermissionListener.onPermissionGranted(requestCode);
         } else {
             if (!PermissionUtils.shouldShowRequestPermissionRationale(activity, permissions)) {
+                // 不再询问已勾选
                 onPermissionListener.onPremissionNeverAskAgain(requestCode);
                 String[] permissionsHint = activity.getResources().getStringArray(R.array.permissions);
                 openSettingActivity(activity,  permissionsHint[requestCode]);

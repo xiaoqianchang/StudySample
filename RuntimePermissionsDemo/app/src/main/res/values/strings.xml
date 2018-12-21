@@ -22,4 +22,7 @@
   <string name="permission_read_external_hint">没有此权限，无法开启这个功能，请开启权限。</string>
   <string name="permission_white_external_hint">没有此权限，无法开启这个功能，请开启权限。</string>
   <string name="permission_recode_audio_hint">没有此权限，无法开启这个功能，请开启权限。</string>
+
+  <string name="yes">OK</string>
+  <string name="no">Cancel</string>
 </resources>

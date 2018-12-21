@@ -25,4 +25,16 @@
       android:orderInCategory="100"
       android:title="RxPermissions"
       app:showAsAction="never" />
+
+    <item
+      android:id="@+id/action_easy_permissions"
+      android:orderInCategory="100"
+      android:title="EasyPermissions"
+      app:showAsAction="never" />
+
+    <item
+      android:id="@+id/action_and_permission"
+      android:orderInCategory="100"
+      android:title="AndPermission"
+      app:showAsAction="never" />
 </menu>
