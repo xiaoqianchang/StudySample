@@ -9,4 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"/>
+
+    <Button
+      android:id="@+id/btn_read_phone_state"
+      android:layout_width="match_parent"
+      android:layout_height="40dp"
+      android:text="btn_read_phone_state"/>
 </LinearLayout>

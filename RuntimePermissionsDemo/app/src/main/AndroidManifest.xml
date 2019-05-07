@@ -19,24 +19,41 @@
   <uses-permission android:name="android.permission.GET_TASKS"/>
 
   <!-- Android6.0 Dangerous permissions and permission groups(危险权限和权限组) -->
+  <!-- CONTACTS(通讯录) -->
   <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
   <uses-permission android:name="android.permission.READ_CONTACTS"/>
   <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
+
+  <!-- PHONE(电话) -->
   <uses-permission android:name="android.permission.READ_CALL_LOG"/>
-  <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+  <uses-permission android:name="android.permission.READ_PHONE_STATE"/> <!-- 设备信息 获取手机识别码 getDeviceId -->
   <uses-permission android:name="android.permission.CALL_PHONE"/>
   <uses-permission android:name="android.permission.WRITE_CALL_LOG"/>
   <uses-permission android:name="android.permission.USE_SIP"/>
   <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
+
+  <!-- CALENDAR(日历) -->
   <uses-permission android:name="android.permission.READ_CALENDAR"/>
   <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
+
+  <!-- CAMERA(相机) -->
   <uses-permission android:name="android.permission.CAMERA"/>
+
+  <!-- SENSORS(身体传感器) -->
   <uses-permission android:name="android.permission.BODY_SENSORS"/>
+
+  <!-- LOCATION(位置信息) -->
   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+  <!-- STORAGE(存储空间) -->
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+  <!-- MICROPHONE(麦克风) -->
   <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+
+  <!-- SMS(短信) -->
   <uses-permission android:name="android.permission.READ_SMS"/>
   <uses-permission android:name="android.permission.RECEIVE_WAP_PUSH"/>
   <uses-permission android:name="android.permission.RECEIVE_MMS"/>
@@ -66,6 +83,8 @@
     <activity android:name=".easypermissions.activity.EasyPermissionsActivity">
     </activity>
     <activity android:name=".andpermission.AndPermissionActivity">
+    </activity>
+    <activity android:name=".TestActivity">
     </activity>
   </application>
 

@@ -1,8 +1,12 @@
 package com.changxiao.runtimepermissionsdemo;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,6 +32,27 @@ public class MainActivity extends AppCompatActivity {
         int heightPixels = getResources().getDisplayMetrics().heightPixels;
         Toast.makeText(this, "widthPixels：" + widthPixels + ", heightPixels：" + heightPixels, Toast.LENGTH_LONG).show();
         Log.d(TAG, "widthPixels：" + widthPixels + ", heightPixels：" + heightPixels);
+
+        findViewById(R.id.btn_read_phone_state).setOnClickListener(v -> {
+//            startActivity(new Intent(this, TestActivity.class)));
+            TelephonyManager manager = (TelephonyManager) getSystemService(
+                Context.TELEPHONY_SERVICE);
+            String deviceId = manager.getDeviceId();
+            Log.e("xc", deviceId);
+        });
+
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setTitle("Dialog").setPositiveButton("OK", null).setMessage("This is Dialog");
+//        AlertDialog alertDialog = builder.create();
+//        alertDialog.show();
+//        finish();
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                alertDialog.dismiss();
+//            }
+//        }, 2000);
+
     }
 
     @Override
