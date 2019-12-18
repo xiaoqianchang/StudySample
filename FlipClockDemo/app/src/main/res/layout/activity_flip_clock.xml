@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/board"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:padding="10dp">
+
+    <com.xiaochang.flipclockdemo.view.FlipSurface
+        android:id="@+id/ampm_surface"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.3"
+        android:visibility="gone" />
+
+    <com.xiaochang.flipclockdemo.view.FlipSurface
+        android:id="@+id/hour_surface"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:visibility="gone" />
+
+    <com.xiaochang.flipclockdemo.view.FlipSurface
+        android:id="@+id/minute_surface"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:visibility="gone" />
+
+    <com.xiaochang.flipclockdemo.view.FlipSurface
+        android:id="@+id/second_surface"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.4"
+        android:visibility="gone" />
+</LinearLayout>
