@@ -1,0 +1,55 @@
+plugins {
+    id 'com.android.library'
+}
+
+android {
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+        // 安装了多个版本的 NDK，想要使用某个特定版本，如下配置
+        // ndkVersion "22.1.7171670" // ndkVersion "major.minor.build" e.g.,  ndkVersion '21.3.6528147'
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    sourceSets {
+        main {
+            // 引入so
+            jniLibs.srcDirs = ['libs']
+            // 禁止ndk自动编译
+            // 编译ndk，注释掉
+            jni.srcDirs = []
+        }
+    }
+    // 编译ndk，打开
+    /*externalNativeBuild {
+        // 未设置特定 CMake 版本的项目使用 CMake 3.10.2 进行构建。
+        cmake {
+            version "3.18.1" // version "cmake-version"
+        }
+        ndkBuild {
+            path "src/main/jni/Android.mk"
+        }
+    }*/
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+}
