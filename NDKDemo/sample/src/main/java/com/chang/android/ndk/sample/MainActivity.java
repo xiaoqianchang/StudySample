@@ -24,16 +24,19 @@ public class MainActivity extends AppCompatActivity {
 //        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
 
         // 加载三方动态库
-        try {
-            System.loadLibrary("sysi4hmi");
-            Toast.makeText(this, "加载成功", Toast.LENGTH_SHORT).show();
-            Log.e(TAG, "加载成功");
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(this, "加载失败", Toast.LENGTH_SHORT).show();
-            Log.e(TAG, "加载失败");
-        }
+//        try {
+//            System.loadLibrary("sysi4hmi");
+//            Toast.makeText(this, "加载成功", Toast.LENGTH_SHORT).show();
+//            Log.e(TAG, "加载成功");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            Toast.makeText(this, "加载失败", Toast.LENGTH_SHORT).show();
+//            Log.e(TAG, "加载失败");
+//        }
 
+        Log.e(TAG, "--------------------- testHmiMethod输出 ----------------------------");
         new JnaHmiTest().testHmiMethod();
+        Log.e(TAG, "--------------------- testHmiCheckMethod输出 ----------------------------");
+        new JnaHmiTest().testHmiCheckMethod();
     }
 }
