@@ -1,0 +1,4 @@
+include ':remoteservicecontract'
+include ':remoteserver'
+include ':client'
+rootProject.name = "AIDLDemo"
