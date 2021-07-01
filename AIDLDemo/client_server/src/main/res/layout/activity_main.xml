@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/btn_bind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onBindRemoteServe"
+        android:text="绑定远程服务"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <Button
+        android:id="@+id/btn_add_person"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onAddPerson"
+        android:text="添加person"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_bind" />
+
+    <Button
+        android:id="@+id/btn_remove_person"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onRemovePerson"
+        android:text="删除person"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_add_person" />
+
+    <Button
+        android:id="@+id/btn_update_person"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onUpdatePerson"
+        android:text="更新person"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_remove_person" />
+
+    <Button
+        android:id="@+id/btn_query_all_person"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onQueryAllPerson"
+        android:text="查询所有person"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_update_person" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

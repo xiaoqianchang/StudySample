@@ -13,6 +13,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/client" />
+            <option value="$PROJECT_DIR$/client_server" />
             <option value="$PROJECT_DIR$/remoteserver" />
             <option value="$PROJECT_DIR$/remoteservicecontract" />
           </set>
