@@ -1,5 +1,8 @@
 package com.chang.android.aidl.server;
 
+import android.os.RemoteException;
+
+import com.chang.android.aidl.service.IDataCallback;
 import com.chang.android.aidl.service.Person;
 
 import java.util.ArrayList;
@@ -16,6 +19,7 @@ public class RemoteController {
     private static final String TAG = "RemoteController";
 
     private List<Person> mPersonList = new ArrayList<>();
+    private IDataCallback mDataCallback;
 
     public void addPerson(Person person) {
         synchronized (mPersonList) {
@@ -55,5 +59,30 @@ public class RemoteController {
 
     public List<Person> queryAll() {
         return mPersonList;
+    }
+
+    public void loadAll(IDataCallback callback) {
+        if (callback != null) {
+            try {
+                callback.onDataReady(mPersonList);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+                dataCallbackOnError(callback, 400, "加载失败");
+            }
+        }
+    }
+
+    private void dataCallbackOnError(IDataCallback callback, int i, String message) {
+        if (callback != null) {
+            try {
+                callback.onError(-1, "error");
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void setDataCallback(IDataCallback callback) {
+        mDataCallback = callback;
     }
 }

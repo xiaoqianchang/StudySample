@@ -19,8 +19,6 @@
 
         <service
             android:name=".RemoteService"
-            android:enabled="true"
-            android:exported="true"
             android:process=":remote">
             <intent-filter>
                 <action android:name="com.chang.android.aidl.server.IRemoteService"/>
