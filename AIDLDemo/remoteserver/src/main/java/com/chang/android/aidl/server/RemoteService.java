@@ -147,6 +147,6 @@ public class RemoteService extends Service {
         super.onDestroy();
         Log.d(TAG, "onDestroy");
         Toast.makeText(this, "远程服务关闭", Toast.LENGTH_SHORT).show();
-
+        mPlayerDispatcher.kill();
     }
 }
