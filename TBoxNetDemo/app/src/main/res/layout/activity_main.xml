@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_host"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:minWidth="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="20dp"
+            android:gravity="center"
+            android:text="host"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/edt_host_input"/>
+
+        <EditText
+            android:id="@+id/edt_host_input"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginRight="20dp"
+            android:hint="请输入正确的host"
+            app:layout_constraintStart_toEndOf="@id/tv_host"
+            app:layout_constraintTop_toTopOf="@id/tv_host"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/tv_host"/>
+
+        <TextView
+            android:id="@+id/tv_port"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:minWidth="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="20dp"
+            android:gravity="center"
+            android:text="port"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_host"
+            app:layout_constraintEnd_toStartOf="@id/edt_port_input"/>
+
+        <EditText
+            android:id="@+id/edt_port_input"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginRight="20dp"
+            android:hint="请输入正确的port"
+            android:inputType="number"
+            app:layout_constraintStart_toEndOf="@id/tv_port"
+            app:layout_constraintTop_toTopOf="@id/tv_port"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/tv_port"/>
+
+        <Button
+            android:id="@+id/tv_tbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Socket测试TBOX的连通性"
+            android:textAllCaps="false"
+            android:onClick="onTestTBox"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_port"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <EditText
+            android:id="@+id/edt_log"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="20dp"
+            android:hint="log..."
+            android:gravity="start|top"
+            android:editable="false"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_tbox"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
