@@ -4,7 +4,11 @@ AIDL exercise lib demo.
 
 AIDL 是 IPC 机制的实现，Service 是 C/S 架构。
 
+参考 [App客户端与后台服务的AIDL通信以及后台服务的JNI接口实现](https://www.cnblogs.com/blogs-of-lxl/p/9268732.html)
+
 ## module
+
+app和remoteserver按常规应用建立，remoteservicecontract通过新建Android Library生成：
 
 - remoteservicecontract Android库，定义通讯接口规范，供client与server使用（直接依赖、aar、jar）
 - remoteserver aidl远程server进程（由服务提供方实现）

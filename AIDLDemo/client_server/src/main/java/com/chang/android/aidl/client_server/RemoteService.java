@@ -30,6 +30,8 @@ import java.util.List;
 public class RemoteService extends Service {
     private static final String TAG = "RemoteService";
 
+    private Context mAppCtx;
+
     private RemoteCallbackList<IPlayerEventDispatcher> mPlayerDispatcher = new MyRemoteCallbackList<>();
 
     private RemoteServiceImpl mRemoteServiceImpl;
@@ -51,6 +53,9 @@ public class RemoteService extends Service {
     }
 
     private void initRemoteService() {
+        if (mAppCtx == null) {
+            mAppCtx = this.getApplicationContext();
+        }
         if (mRemoteServiceImpl == null) {
             mRemoteServiceImpl = new RemoteServiceImpl();
         }

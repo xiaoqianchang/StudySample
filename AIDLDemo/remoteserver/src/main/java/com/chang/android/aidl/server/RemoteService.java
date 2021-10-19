@@ -21,7 +21,7 @@ import com.chang.android.aidl.service.Person;
 import java.util.List;
 
 /**
- * Description: $
+ * Description: This class exposes the service to client（服务端，将服务（service）"暴露"给客户端（client））
  * <p>
  * Created by Nicholas Sean on 2021/7/1 3:40 PM.
  *
@@ -32,8 +32,8 @@ public class RemoteService extends Service {
 
     private RemoteCallbackList<IPlayerEventDispatcher> mPlayerDispatcher = new MyRemoteCallbackList<>();
 
-    private RemoteServiceImpl mRemoteServiceImpl;
-    private RemoteController mRemoteController;
+    private RemoteServiceImpl mRemoteServiceImpl; // 远程服务的实现
+    private RemoteController mRemoteController; // 远程服务的实现的业务控制器
 
     public static final Intent getIntent(Context ctx) {
         Intent intent = new Intent(ctx, RemoteService.class);
@@ -77,6 +77,9 @@ public class RemoteService extends Service {
         return mRemoteServiceImpl;
     }
 
+    /**
+     * 远程服务的实现
+     */
     class RemoteServiceImpl extends IRemoteService.Stub {
         @Override
         public void addPerson(Person person) throws RemoteException {

@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
         private const val TAG = "MainActivity";
     }
 
+    // 监视服务状态
     private val mConn = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             Log.d(TAG, "onServiceConnected()")
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity() {
 
         override fun onServiceDisconnected(name: ComponentName?) {
             Log.d(TAG, "onServiceDisconnected()")
+            mRemoteService = null
         }
     }
 
@@ -83,6 +85,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        // 断开与远程服务的链接
         unbindService(mConn)
     }
 }
