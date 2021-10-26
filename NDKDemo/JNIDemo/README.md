@@ -1,5 +1,7 @@
 ## JNIDemo
 
+该 module 仅仅是实现 JNI 的开发流程，都是通过 Java 命令执行。
+
 ### 1.1、在 Java 中申明 native 方法
 
 见 JNITest 中定义的 native 方法。
