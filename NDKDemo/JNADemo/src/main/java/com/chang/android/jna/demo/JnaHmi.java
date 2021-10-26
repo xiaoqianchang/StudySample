@@ -111,6 +111,11 @@ public class JnaHmi {
             protected List<String> getFieldOrder() {
                 return Arrays.asList("policyFileUrl", "policyFileSize", "policyFileHash");
             }
+
+            @Override
+            public String toString() {
+                return "PstPolicyInfo{" + "policyFileUrl='" + policyFileUrl + '\'' + ", policyFileSize=" + policyFileSize + ", policyFileHash='" + policyFileHash + '\'' + '}';
+            }
         }
     }
 }

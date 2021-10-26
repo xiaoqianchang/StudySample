@@ -26,10 +26,15 @@ public class JnaHmiTest {
         /*
         测试回调
          */
-        int check = JnaHmi.JnaLibrary.INSTANCE.adm_sysi4hmi_checkInit(new JnaHmi.JnaLibrary.CheckInitInfo.ByValue(new JnaHmi.JnaLibrary.CheckResultNotifyCallback() {
+        int check = JnaHmi.JnaLibrary.INSTANCE.adm_sysi4hmi_checkInit(new JnaHmi.JnaLibrary.CheckInitInfo(new JnaHmi.JnaLibrary.CheckResultNotifyCallback() {
             @Override
             public void invoke(int eCmdidType, String sessionId, String state, Pointer pstPolicyInfo, int errorCode) {
-                Log.e(TAG, "adm_sysi4hmi_checkInit: eCmdidType=" + eCmdidType + ", sessionId=" + sessionId + ", state=" + state + ", pstPolicyInfo=" + pstPolicyInfo.getString(0) + ", errorCode=" + errorCode);
+                Log.e(TAG, "adm_sysi4hmi_checkInit: " +
+                        "eCmdidType=" + eCmdidType +
+                        ", sessionId=" + sessionId +
+                        ", state=" + state +
+                        ", pstPolicyInfo=" + pstPolicyInfo +
+                        ", errorCode=" + errorCode);
             }
         }));
         Log.e(TAG, "adm_sysi4hmi_checkInit=" + check);
