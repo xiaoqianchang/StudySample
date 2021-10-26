@@ -16,7 +16,9 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         ndk {
-            abiFilters "armeabi"/*"armeabi-v7a", *//*"x86", *//*"x86_64"*/
+            // 告诉程序加载如下的so文件
+            // 设置打包时只编译那种ABI的so库
+            abiFilters /*"armeabi-v7a", */'arm64-v8a'/*, "x86", "x86_64"*/
         }
     }
 

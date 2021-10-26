@@ -1,3 +1,4 @@
+include ':JNIDemo'
 include ':JNADemo'
 include ':NativeApp'
 include ':seclib'
