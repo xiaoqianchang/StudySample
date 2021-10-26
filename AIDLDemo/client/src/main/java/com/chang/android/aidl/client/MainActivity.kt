@@ -4,12 +4,13 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
+import android.os.RemoteException
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.chang.android.aidl.service.IRemoteService
 import com.chang.android.aidl.service.Person
 
@@ -19,6 +20,8 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "MainActivity";
+        // 标志当前与服务端连接状况的布尔值，false为未连接，true为连接中
+        private const val mBound = false
     }
 
     // 监视服务状态
@@ -47,7 +50,7 @@ class MainActivity : AppCompatActivity() {
      * 2. 如果 service 所在的进程已启动，去 startService 是可以正常启动的。
      * 3. 直接 bindService 启动并绑定服务。
      */
-    fun onBindRemoteServe(view: View) {
+    fun onBindRemoteServe(view: View?) {
         Log.d(TAG, "开始绑定远程服务")
         val intent = Intent("com.chang.android.aidl.server.IRemoteService")
         intent.setPackage("com.chang.android.aidl.server") // 此处的包名应该为远程服务所在的应用程序包名称
@@ -56,12 +59,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onAddPerson(view: View) {
+        if (!mBound) {
+            onBindRemoteServe(null)
+            Toast.makeText(this, "当前与服务端处于未连接状态，正在尝试重连，请稍后再试", Toast.LENGTH_SHORT).show()
+            return
+        }
         val person = Person(
-            "张三",
-            20
+                "张三",
+                20
         )
-        mRemoteService?.addPerson(person)
-        Toast.makeText(this, "添加person $person 成功", Toast.LENGTH_SHORT).show()
+        try {
+            mRemoteService?.addPerson(person)
+            Toast.makeText(this, "添加person $person 成功", Toast.LENGTH_SHORT).show()
+        } catch (e: RemoteException) {
+            e.printStackTrace()
+        }
     }
 
     fun onRemovePerson(view: View) {
@@ -70,8 +82,8 @@ class MainActivity : AppCompatActivity() {
 
     fun onUpdatePerson(view: View) {
         val person = Person(
-            "张三",
-            22
+                "张三",
+                22
         )
         mRemoteService?.updatePerson(person)
         Toast.makeText(this, "更新person $person 成功", Toast.LENGTH_SHORT).show()
