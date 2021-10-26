@@ -19,7 +19,7 @@ android {
         externalNativeBuild {
             cmake {
 //                cppFlags ""
-                // 生成多个版本的so文件，如果不指定会根据对应平台架构生成
+                // 生成多个版本的so文件，如果不指定会根据对应平台架构生成（默认有armeabi-v7a、arm64-v8a、x86、x86_64）
 //                abiFilters 'armeabi-v7a'//, 'arm64-v8a', 'x86', 'x86_64'
                 arguments "-DANDROID_STL=c++_shared" // 为了编译出libc++_shared.so
             }

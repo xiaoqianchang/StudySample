@@ -16,8 +16,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         ndk {
-            // 告诉程序加载如下的so文件
-            // 设置打包时只编译那种ABI的so库
+            // 设置打包时把那种ABI的so库打进apk
             abiFilters /*"armeabi-v7a", */'arm64-v8a'/*, "x86", "x86_64"*/
         }
     }
