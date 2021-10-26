@@ -1,6 +1,25 @@
 ## JNIDemo
 
-### 编译生成 so 库并在 java 中调用
+### 1.1、在 Java 中申明 native 方法
+
+见 JNITest 中定义的 native 方法。
+
+### 1.2、生成 JNI 头文件
+
+``` bash
+# 先进入源码目录
+cd JNIDemo/src/main/java
+# 编译 java 文件
+javac com/chang/jni/demo/JNITest.java
+# 生成 JNI 头文件（在 JNIDemo/src/main/java/ 目录）
+javah com.chang.jni.demo.JNITest
+```
+
+### 1.3、实现 JNI 方法
+
+见 jni 包中 test.c 和 test.cpp
+
+### 1.4、编译生成 so 库并在 java 中调用
 
 so 库的编译可以采用 gcc 。
 
