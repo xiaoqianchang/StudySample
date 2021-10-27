@@ -1,7 +1,5 @@
 package com.chang.jni.demo;
 
-import java.util.StringTokenizer;
-
 /**
  * 简单 get、set native 方法和 C/C++ 交互。
  * <p>
@@ -30,6 +28,16 @@ public class JNITest {
         jniTest.set("Hello, I am from java.");
     }
 
+    /*
+    java 调用 JNI
+     */
     public native String get();
     public native void set(String str);
+
+    /*
+    JNI 调用 Java
+     */
+    public static void methodCalledByJni(String msgFromJni) {
+        System.out.println("methodCalledByJni, msg: " + msgFromJni);
+    }
 }
