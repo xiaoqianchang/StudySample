@@ -3,4 +3,4 @@ include ':JNADemo'
 include ':NativeApp'
 include ':seclib'
 include ':sample'
-rootProject.name = "NDKDemo"
+rootProject.name = "NativeDemo"
