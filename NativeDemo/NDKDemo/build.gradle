@@ -16,6 +16,11 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
 
+        // 安装了多个版本的 NDK，想要使用某个特定版本，如下配置
+        // ndkVersion "22.1.7171670" // ndkVersion "major.minor.build" e.g.,  ndkVersion '21.3.6528147'
+
+        // This block is different from the one you use to link Gradle
+        // to your CMake or ndk-build script.
         externalNativeBuild {
 
             // For ndk-build, instead use the ndkBuild block.
@@ -25,24 +30,27 @@ android {
                 arguments "-DANDROID_STL=c++_shared" // 为了编译出libc++_shared.so
 
                 // Sets a flag to enable format macro constants for the C compiler.
-//                cFlags "-D__STDC_FORMAT_MACROS"
+                cFlags "-D__STDC_FORMAT_MACROS"
 
                 // Sets optional flags for the C++ compiler.
-//                cppFlags ""
+                cppFlags "-fexceptions", "-frtti"
 
-                // 生成多个版本的so文件，如果不指定会根据对应平台架构生成（默认有armeabi-v7a、arm64-v8a、x86、x86_64）
-//                abiFilters 'armeabi-v7a'//, 'arm64-v8a', 'x86', 'x86_64'
+                // 构建指定abi的so文件（如果不指定会根据默认abi构建，默认有armeabi-v7a、arm64-v8a、x86、x86_64）
+                abiFilters /*'armeabi-v7a', */'arm64-v8a'/*, 'x86', 'x86_64'*/
             }
             // or ndkBuild {...}
         }
 
-        // Similar to other properties in the defaultConfig block,
-        // you can configure the ndk block for each product flavor
-        // in your build configuration.
-        // 注意：如果 app 中也有 ndk 配置，会导致编译失败
+        // 该模块中的abiFilters管理gradle对指定abi的构建和打包。
+        // 注意: 该模块配置的含义分当前build.gradle是属于app和module两种情况
+        // 属于app: ndk中abiFilters配置表示对指定abi构建和打包，会覆盖上面cmake中abiFilters的配置。
+        // 属于module分两种情况:
+        //      被app依赖: ndk中abiFilters配置表示对指定abi构建，会覆盖上面cmake中abiFilters的配置。（要配置打包指定abi需要在app中配置该模块）
+        //      打包aar: ndk中abiFilters配置表示对指定abi构建，会与上面cmake中abiFilters的配置取并集，如果无并集会编译不过，最终在aar中存在的so是构建生成和module本身存在的集合。
+        // 总结: 如果该文件属于app，就配置该模块，不用配置上面cmake中abiFilters；如果该文件属于module，就不配置该模块，用上面cmake中abiFilters代替；
 //        ndk {
-//            // Specifies the ABI configurations of your native
-//            // libraries Gradle should build and package with your app.
+            // Specifies the ABI configurations of your native
+            // libraries Gradle should build and package with your app.
 //            abiFilters 'armeabi-v7a'//, 'arm64-v8a', 'x86', 'x86_64'
 //        }
     }
@@ -69,19 +77,20 @@ android {
     }
 
     // Use this block to link Gradle to your CMake or ndk-build script.
-//    externalNativeBuild { // 设置cmake编译脚本，编译ndk，配置CMakeLists.txt路径
-//
-//        // Encapsulates your CMake build configurations.
-//        cmake {
-//
-//            // Provides a relative path to your CMake build script.
-//            path "src/main/cpp/CMakeLists.txt"
-//
-//            // 未设置特定 CMake 版本的项目使用 CMake 3.10.2 进行构建。
-//            version "3.10.2"
-//        }
-//        // or ndkBuild {...}
-//    }
+    // Encapsulates your external native build configurations.
+    externalNativeBuild { // 编译ndk: 配置：open 注释：close
+
+        // Encapsulates your CMake build configurations.
+        cmake { // 设置cmake编译脚本，配置CMakeLists.txt路径
+
+            // Provides a relative path to your CMake build script.
+            path "src/main/cpp/CMakeLists.txt"
+
+            // 未设置特定 CMake 版本的项目使用 CMake 3.10.2 进行构建。
+            version "3.10.2"
+        }
+        // or ndkBuild {...}
+    }
 }
 
 dependencies {

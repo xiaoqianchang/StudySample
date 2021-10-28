@@ -55,3 +55,46 @@ target_link_libraries( # Specifies the target library.
 
         # Links the log library to the target library.
         ${log-lib})
+
+### 上面是标准模板 ###
+### 下面添加其他库 ###
+
+# 添加 NDK 原生库
+
+# 如需提供本地 NDK 库的路径，您可以使用 Android Studio 自动为您定义的 ANDROID_NDK 路径变量。
+# 以下命令可以指示 CMake 将 NDK 中源文件 android_native_app_glue.c（负责管理 NativeActivity 生命周期事件和触摸输入）
+# 构建至静态库，并将其与 native-lib 关联：
+add_library(
+        app-glue
+        STATIC
+        ${ANDROID_NDK}/sources/android/native_app_glue/android_native_app_glue.c )
+
+# You need to link static libraries against your shared native library.
+target_link_libraries( native-lib app-glue ${log-lib} )
+
+# 添加其他预构建库
+
+# 添加预构建库的步骤与为 CMake 指定其他要构建的原生库的步骤相似。不过，由于库已构建，因此您需要使用
+# IMPORTED 标志指示 CMake 您只想要将此库导入到您的项目中：
+add_library(
+        imported-lib
+        SHARED
+        IMPORTED )
+# 然后，您需要使用 set_target_properties() 命令指定库的路径，具体命令如下所示。
+#
+# 某些库会针对特定的 CPU 架构或应用二进制接口 (ABI) 提供单独的软件包，并将其整理到单独的目录中。此方法既有助于
+# 库充分利用特定的 CPU 架构，又能让您只使用所需的库版本。如需向 CMake 构建脚本添加库的多个 ABI 版本，而不必为
+# 库的每个版本编写多个命令，您可以使用 ANDROID_ABI 路径变量。此变量使用的是 NDK 支持的一组默认 ABI，或者您手
+# 动配置 Gradle 而让其使用的一组经过过滤的 ABI。例如：
+set_target_properties( # Specifies the target library.
+        imported-lib
+
+        # Specifies the parameter you want to define.
+        PROPERTIES IMPORTED_LOCATION
+
+        # Provides the path to the library you want to import.
+        imported-lib/src/${ANDROID_ABI}/libimported-lib.so )
+# 为了让 CMake 能够在编译时找到头文件，您需要使用 include_directories() 命令并包含相应头文件的路径：
+include_directories( imported-lib/include/ )
+# 如需将预构建库关联到您自己的原生库，请将其添加到 CMake 构建脚本的 target_link_libraries() 命令中：
+target_link_libraries( native-lib imported-lib app-glue ${log-lib} )
