@@ -1,3 +1,4 @@
+include ':NDKDemo'
 include ':JNIDemo'
 include ':JNADemo'
 include ':NativeApp'
