@@ -1,6 +1,9 @@
 ## JNIDemo
 
 该 module 仅仅是实现 JNI 的开发流程，都是通过 Java 命令执行。
+简单的 Java 调用 JNI 、JNI 调用 Java 然后 gcc 编译源文件为原生库（mac 电脑如果
+安装了 xcode commond line tool 会包含 clang 编译工具，内部包含 gcc），关于 Cmake 的
+配置、 JNI 调用 Java 的多种方式、ndk 编程请看 NDKDemo。
 
 ### 1.1、在 Java 中申明 native 方法
 
