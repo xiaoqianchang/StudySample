@@ -72,7 +72,8 @@ android {
     sourceSets {
         main {
             jni.srcDirs = []
-            jniLibs.srcDirs = ['src/main/jniLibs']
+            // gradle 插件在4.0及以后，如果该配置的值为src/main/jniLibs，那么不再需要该配置，因为会将src/main/jniLibs中预构建依赖项自动打包到aar和apk中
+//            jniLibs.srcDirs = ['src/main/jniLibs']
         }
     }
 
