@@ -16,7 +16,9 @@ JNIEXPORT void JNICALL Java_com_chang_jni_demo_JNITest_set
     printf("invoke set from c\n");
     char* str = (char*)(*env)->GetStringUTFChars(env,string,NULL);
     printf("%s\n", str);
-    // 测试 jni 调用 java
+    // 测试 jni 调用 java 静态方法
+    callJavaStaticMethod(env, thiz);
+    // 测试 jni 调用 java 方法
     callJavaMethod(env, thiz);
     (*env)->ReleaseStringUTFChars(env, string, str);
 }
