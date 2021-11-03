@@ -35,9 +35,15 @@ public class JNITest {
     public native void set(String str);
 
     /*
-    JNI 调用 Java
+    JNI 调用 Java 静态方法
      */
-    public static void methodCalledByJni(String msgFromJni) {
+    public static void staticMethodCalledByJni(String msgFromJni) {
+        System.out.println("staticMethodCalledByJni, msg: " + msgFromJni);
+    }
+    /*
+    JNI 调用 Java 方法
+     */
+    public void methodCalledByJni(String msgFromJni) {
         System.out.println("methodCalledByJni, msg: " + msgFromJni);
     }
 }
