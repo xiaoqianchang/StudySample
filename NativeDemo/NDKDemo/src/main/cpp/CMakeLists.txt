@@ -28,7 +28,9 @@ add_library( # Specifies the name of the library.
 
         # Provides a relative path to your source file(s).
         # 设置源码的路径
-        native-lib.cpp) # 注意是路径，而不是包，不可用.区分，需要使用/ ,如 src/main/cpp/native-lib.cpp
+        native-lib.cpp
+        jni-test.cpp
+        jni-callback-test.cpp) # 注意是路径，而不是包，不可用.区分，需要使用/ ,如 src/main/cpp/native-lib.cpp
 
 # Specifies a path to native header files.
 include_directories( src/main/cpp/include/ )

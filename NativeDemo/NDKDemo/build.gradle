@@ -48,11 +48,11 @@ android {
         //      被app依赖: ndk中abiFilters配置表示对指定abi构建，会覆盖上面cmake中abiFilters的配置。（要配置打包指定abi需要在app中配置该模块）
         //      打包aar: ndk中abiFilters配置表示对指定abi构建，会与上面cmake中abiFilters的配置取并集，如果无并集会编译不过，最终在aar中存在的so是构建生成和module本身存在的集合。
         // 总结: 如果该文件属于app，就配置该模块，不用配置上面cmake中abiFilters；如果该文件属于module，就不配置该模块，用上面cmake中abiFilters代替；
-//        ndk {
+        // ndk {
             // Specifies the ABI configurations of your native
             // libraries Gradle should build and package with your app.
-//            abiFilters 'armeabi-v7a'//, 'arm64-v8a', 'x86', 'x86_64'
-//        }
+            // abiFilters 'armeabi-v7a'//, 'arm64-v8a', 'x86', 'x86_64'
+        // }
     }
 
     buildTypes {
@@ -66,14 +66,14 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
     sourceSets {
         main {
             jni.srcDirs = []
             // gradle 插件在4.0及以后，如果该配置的值为src/main/jniLibs，那么不再需要该配置，因为会将src/main/jniLibs中预构建依赖项自动打包到aar和apk中
-//            jniLibs.srcDirs = ['src/main/jniLibs']
+            // jniLibs.srcDirs = ['src/main/jniLibs']
         }
     }
 

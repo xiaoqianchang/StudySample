@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+    id 'kotlin-android'
 }
 
 android {
@@ -31,6 +32,14 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
+    buildFeatures {
+        viewBinding true
+        dataBinding true
+    }
 
     sourceSets {
         main {
@@ -51,4 +60,5 @@ dependencies {
 
     implementation project(':seclib')
     implementation project(':JNADemo')
+    implementation project(':NDKDemo')
 }

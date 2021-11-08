@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".NdkDemoActivity">
+
+        <Button
+            android:id="@+id/btn_jni_callback1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="JNI回调-直接调用"
+            android:textAllCaps="false"
+            android:onClick="onJniCallback1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <Button
+            android:id="@+id/btn_jni_callback2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="JNI回调-子线程调用"
+            android:textAllCaps="false"
+            android:onClick="onJniCallback2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_jni_callback1"/>
+
+        <Button
+            android:id="@+id/btn_jni_callback3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="JNI回调-callback调用"
+            android:textAllCaps="false"
+            android:onClick="onJniCallback3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_jni_callback2"/>
+
+        <Button
+            android:id="@+id/btn_jni_static_callback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="JNI回调java静态方法"
+            android:textAllCaps="false"
+            android:onClick="onJniStaticCallback"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_jni_callback3"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
