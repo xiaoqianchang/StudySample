@@ -13,8 +13,10 @@ import java.util.UUID;
  * 3. 通过把接口jobject传递到c层下面去，然后在c层里面进行回调;
  * 参考： https://www.jianshu.com/p/e576c7e1c403
  *
- * Java和c交互时，native方法的调用建议放到子线程，因为当native方法比较耗时时会体现在java这边的主线程里。
- * c里面没有主线程的概念，即使c里面是在线程里面处理逻辑，在有callback给java时，
+ * 注意：
+ * 1. Java和c交互时，native方法的调用建议放到子线程，因为当native方法比较耗时时会体现在java这边的主线程里。
+ * c里面没有主线程的概念，即使c里面是在线程里面处理逻辑，在有callback给java时，还是提现在主线程。
+ * 2. c调用java定义的方法，不管是否为静态，方法可以定义为 private ；
  * <p>
  * Created by Nicholas Sean on 2021/11/2 8:13 下午.
  *

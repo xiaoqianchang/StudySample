@@ -279,7 +279,7 @@ Java_com_chang_android_ndk_JniCallbackTest_nativeInstall1(JNIEnv *env, jobject t
         LOGE("find method onInstallProgress error!");
         return;
     }
-    jint ret = env->CallStaticIntMethod(clazz, callbackMethodId, 50l, 100l);
+    jint ret = env->CallStaticIntMethod(clazz, callbackMethodId, 100l, 50l);
 
     return;
 }
