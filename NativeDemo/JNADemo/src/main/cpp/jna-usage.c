@@ -141,6 +141,7 @@ int setUserPoint(User *pUser) {
     pUser->id = 11;
     pUser->name = "I am from c!";
     pUser->age = 22;
+    printf("c printf: setUser in id = %ld, name = %s, age = %d\n", pUser->id, pUser->name, pUser->age);
     return 0;
 }
 // 获取结构体(out)(由主调者分配内存)
