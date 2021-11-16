@@ -130,7 +130,7 @@ int setUser(User user) {
     user.id = 11;
     user.name = "I am from c!";
     user.age = 22;
-    // 传递结构体本身(值传递)，上面赋值代码对 C 无效对 Java 无效
+    // 传递结构体本身(值传递)，上面赋值代码对 C 有效对 Java 无效
     printf("c printf: setUser in id = %ld, name = %s, age = %d\n", user.id, user.name, user.age);
     return 0;
 }
