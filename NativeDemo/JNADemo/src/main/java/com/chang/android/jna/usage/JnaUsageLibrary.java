@@ -68,42 +68,45 @@ public interface JnaUsageLibrary extends Library {
 
     /*
     传递结构体
+    注意：2、3、4、5都可以将参数型类改为User，调用的地方既可以传User.ByReference也可以传User。
      */
-    // 值传递
+    // 1. 值传递
     int setUser(User.ByValue user);
-    // 指针传递
+    // 2. 指针传递
     int setUserPoint(User.ByReference pUser);
-    // 获取结构体(out)(由主调者分配内存)
+    int setUserPoint(User pUser); // C端参数为User指针，那Java端对应参数既可以为User.ByReference也可以为User
+    // 3. 获取结构体(out)(由主调者分配内存)
     void getUser(User.ByReference pUser);
-    // 获取结构体(由被调者分配内存，注意要主动释放)
+    // 4. 获取结构体(由被调者分配内存，注意要主动释放)
     User.ByReference getUser2();
-    // 释放内存空间
+    // 5. 释放内存空间
     void freeUser(User.ByReference user);
 
     /*
     传递结构体数组
      */
-    // 传递结构体数组
+    // 传递结构体数组（此处的数组类型只能是User[]，不能是User.ByReference[]，调用的地方也只能是new User().toArray(length)方式创建数组）
     int setUserArray(User[] users, int arrayLength);
     // 获取结构体数组（二维数组一维化）
     void getUserArray(User.ByReference pUser, IntByReference pArrayLength);
-    // 获取结构体数组（这里的返回值可以写为User，因为多态）
-    User.ByReference getUserArray2(IntByReference pArrayLength);
+    // 获取结构体数组（这里的返回值可以写为User.ByReference，调用地方的接收为结构体.ByReference，并用.toArray(length)转为数组）
+    User getUserArray2(IntByReference pArrayLength);
     // 释放内存空间
-    void freeUsers(User.ByReference[] users);
+    void freeUsers(User[] users);
 
     /*
     获取复杂结构体
+    注意：2、3、4、5都可以将参数型类改为Company，调用的地方既可以传Company.ByReference也可以传Company，但是Company内部嵌套的User必须为User.ByReference。
      */
-    // 传递复杂结构体（传递结构体嵌套结构体）
+    // 1. 传递复杂结构体（传递结构体嵌套结构体）
     void setCompany(Company.ByReference pCompany);
-    // 获取复杂结构体（获取结构体嵌套结构体）
+    // 2. 获取复杂结构体（获取结构体嵌套结构体）
     void getCompany(Company.ByReference pCompany);
-    // 释放复杂结构体嵌套结构体内存空间
-    void freeCompanyInternalPointer(Company company);
-    // 获取复杂结构体
+    // 3. 释放复杂结构体嵌套结构体内存空间
+    void freeCompanyInternalPointer(Company.ByReference company);
+    // 4. 获取复杂结构体
     Company.ByReference getCompany2();
-    // 释放复杂结构体嵌套结构体内存空间
+    // 5. 释放复杂结构体嵌套结构体内存空间
     void freeCompany(Company.ByReference pCompany);
     /***************************** Java 调原生方法 end *******************************/
 

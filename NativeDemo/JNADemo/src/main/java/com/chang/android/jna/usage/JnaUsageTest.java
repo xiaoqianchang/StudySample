@@ -207,6 +207,14 @@ public class JnaUsageTest {
         userReference.age = 20;
         JnaUsageLibrary.INSTANCE.setUserPoint(userReference);
         System.out.println("java printf: setUserPoint out " + userReference.toString());
+
+        // 上面结构体对象指针可以改为直接new对象（效果一样）
+//        User user = new User();
+//        user.id = new NativeLong(5);
+//        user.name = "Nicholas Sean";
+//        user.age = 20;
+//        JnaUsageLibrary.INSTANCE.setUserPoint(user);
+//        System.out.println("java printf: setUserPoint out " + user.toString());
     }
 
     /**
@@ -248,6 +256,26 @@ public class JnaUsageTest {
             users[i].name = "Nicholas Sean" + i;
             users[i].age = 18 + i;
         }
+        /*
+        如下通过new来创建数组，将会报如下异常：
+        Exception in thread "main" java.lang.IllegalArgumentException: Structure array elements must use contiguous memory (bad backing address at Structure array index 1)
+            at com.sun.jna.Structure.structureArrayCheck(Structure.java:2213)
+            at com.sun.jna.Structure.autoWrite(Structure.java:2244)
+            at com.sun.jna.Function.convertArgument(Function.java:617)
+            at com.sun.jna.Function.invoke(Function.java:345)
+            at com.sun.jna.Library$Handler.invoke(Library.java:265)
+            at com.sun.proxy.$Proxy0.setUserArray(Unknown Source)
+            at com.chang.android.jna.usage.JnaUsageTest.setUserArray(JnaUsageTest.java:269)
+            at com.chang.android.jna.usage.JnaUsageTest.main(JnaUsageTest.java:54)
+         */
+//        User[] users = new User[length];
+//        for (int i = 0; i < users.length; i++) {
+//            User user = new User();
+//            user.id = new NativeLong(500235 + i);
+//            user.name = "Nicholas Sean" + i;
+//            user.age = 18 + i;
+//            users[i] = user;
+//        }
         JnaUsageLibrary.INSTANCE.setUserArray(users, length);
     }
 
@@ -275,7 +303,7 @@ public class JnaUsageTest {
      * 获取结构体数组
      */
     private static void getUserArray2() {
-        User.ByReference[] users = null;
+        User[] users = null;
         try {
             IntByReference lengthReference = new IntByReference();
             User retUser = JnaUsageLibrary.INSTANCE.getUserArray2(lengthReference);
@@ -283,12 +311,12 @@ public class JnaUsageTest {
             if (retUser == null) {
                 return;
             }
-            users = (User.ByReference[]) retUser.toArray(lengthReference.getValue());
+            users = (User[]) retUser.toArray(lengthReference.getValue());
             for (User user : users) {
                 System.out.println("java printf: " + user.toString());
             }
             // 这里可以把数组在传递给 C ，然后 C 做业务逻辑
-//            JnaUsageLibrary.INSTANCE.setUserArray(users);
+//            JnaUsageLibrary.INSTANCE.setUserArray(users, lengthReference.getValue());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
