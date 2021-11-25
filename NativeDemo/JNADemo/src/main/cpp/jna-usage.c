@@ -255,7 +255,7 @@ void getCompany(Company *pCompany) {
     memset(pArray, 0, sizeof(User) * length); //
     for (int i = 0; i < length; i++) {
         pArray[i].id = 100 + (long)i;
-//        pArray[i].name = "Nicholas Sean";
+        pArray[i].name = "Nicholas Sean";
         pArray[i].age = 18 + i;
     }
     pCompany->userArray = pArray;
