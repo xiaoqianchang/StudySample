@@ -238,7 +238,19 @@ void getCompany(Company *pCompany) {
     pCompany->id = 100;
     pCompany->name = "Adup";
     pCompany->userArrayLength = length;
-    User *pArray = malloc(length * sizeof(User));
+    User *pArray = NULL;
+    if (length <= 0) { // 当数组长度为0时一定要memset 0，否则内部的指针成员指向随机数（野指针/值）（为新申请的内存做初始化工作）
+        /*
+         * 函数介绍：
+         * void *memset(void *s, int ch, size_t n);
+         * 函数解释：将s中当前位置后面的n个字节（typedef unsigned int size_t）用 ch 替换并返回 s 。
+         * memset：作用是在一段内存块中填充某个给定的值，它是对较大的结构体或数组进行清零操作的一种最快方法。
+         * memset()函数原型是extern void *memset(void *buffer, int c, int count) buffer：为指针或是数组,c：是赋给buffer的值,count：是buffer的长度.
+         */
+//        memset(pArray, 0, sizeof(User) * length); // 或者 memset(pArray, 0, sizeof(pArray)); // sizeof(pArray) = length * sizeof(User)
+    } else {
+        pArray = malloc(length * sizeof(User));
+    }
     for (int i = 0; i < length; i++) {
         pArray[i].id = 100 + (long)i;
         pArray[i].name = "Nicholas Sean";
