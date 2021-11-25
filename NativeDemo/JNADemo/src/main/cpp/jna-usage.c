@@ -239,21 +239,23 @@ void getCompany(Company *pCompany) {
     pCompany->name = "Adup";
     pCompany->userArrayLength = length;
     User *pArray = NULL;
-    if (length <= 0) { // 当数组长度为0时一定要memset 0，否则内部的指针成员指向随机数（野指针/值）（为新申请的内存做初始化工作）
-        /*
-         * 函数介绍：
-         * void *memset(void *s, int ch, size_t n);
-         * 函数解释：将s中当前位置后面的n个字节（typedef unsigned int size_t）用 ch 替换并返回 s 。
-         * memset：作用是在一段内存块中填充某个给定的值，它是对较大的结构体或数组进行清零操作的一种最快方法。
-         * memset()函数原型是extern void *memset(void *buffer, int c, int count) buffer：为指针或是数组,c：是赋给buffer的值,count：是buffer的长度.
-         */
-//        memset(pArray, 0, sizeof(User) * length); // 或者 memset(pArray, 0, sizeof(pArray)); // sizeof(pArray) = length * sizeof(User)
-    } else {
+    if (length > 0) { // 此处判断大于0才malloc是为了解决下面memset后还是终止的问题，也就是如果无此判断后面memset后还是会终止。
         pArray = malloc(length * sizeof(User));
     }
+    // 当指针指向的数组长度为0时或者指针指向的结构体内部有属性未显示赋值时一定要memset 0，否则内部的指针成员指向随机数（野指针/值）（为新申请的内存做初始化工作）
+    // ，当java调用时会出现Null指针异常（SIGSEGV）或者数据异常（不是java数据类型默认值，而是一串数字）。
+    // 所以最好在 malloc 后都执行下 memset 。
+    /*
+     * 函数介绍：
+     * void *memset(void *s, int ch, size_t n);
+     * 函数解释：将s中当前位置后面的n个字节（typedef unsigned int size_t）用 ch 替换并返回 s 。
+     * memset：作用是在一段内存块中填充某个给定的值，它是对较大的结构体或数组进行清零操作的一种最快方法。
+     * memset()函数原型是extern void *memset(void *buffer, int c, int count) buffer：为指针或是数组,c：是赋给buffer的值,count：是buffer的长度.
+     */
+    memset(pArray, 0, sizeof(User) * length); //
     for (int i = 0; i < length; i++) {
         pArray[i].id = 100 + (long)i;
-        pArray[i].name = "Nicholas Sean";
+//        pArray[i].name = "Nicholas Sean";
         pArray[i].age = 18 + i;
     }
     pCompany->userArray = pArray;
@@ -282,12 +284,17 @@ void freeCompanyInternalPointer(Company *pCompany) {
 //}
 // 获取复杂结构体
 Company * getCompany2() {
-    int length = 5;
+    int length = 1;
     Company *pCompany = malloc(sizeof(Company));
+    memset(pCompany, 0, sizeof(*pCompany)); // 此处也一样，当分配空间后里面有一个属性未被显示赋值，当java调用时会出现Null指针异常（SIGSEGV）或者数据异常（不是java数据类型默认值，而是一串数字）。
     pCompany->id = 100;
     pCompany->name = "Adup";
     pCompany->userArrayLength = length;
-    User *pArray = malloc(length * sizeof(User));
+    User *pArray = NULL;
+    if (length > 0) {
+        pArray = malloc(length * sizeof(User));
+    }
+    memset(pArray, 0, sizeof(User) * length);
     for (int i = 0; i < length; i++) {
         pArray[i].id = 100 + (long)i;
         pArray[i].name = "Nicholas Sean";

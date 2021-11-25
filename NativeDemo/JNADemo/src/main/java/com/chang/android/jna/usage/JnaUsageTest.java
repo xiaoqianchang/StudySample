@@ -39,7 +39,7 @@ public class JnaUsageTest {
 
 //        basicDataTypePointerTest();
 
-        mallocTest();
+//        mallocTest();
 
 //        doublePointTest();
 
@@ -57,7 +57,7 @@ public class JnaUsageTest {
 
 //        setCompany();
 
-//        getCompany();
+        getCompany();
 
 //        getCompany2();
 
@@ -375,9 +375,11 @@ public class JnaUsageTest {
                 return;
             }
             System.out.println("java printf: " + company.toString());
-            User.ByReference[] users = (User.ByReference[]) company.userArray.toArray(company.userArrayLength);
-            for (User user : users) {
-                System.out.println("java printf: " + user.toString());
+            if (company.userArray != null) {
+                User.ByReference[] users = (User.ByReference[]) company.userArray.toArray(company.userArrayLength);
+                for (User user : users) {
+                    System.out.println("java printf: " + user.toString());
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
