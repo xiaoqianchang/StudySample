@@ -22,7 +22,7 @@ add_library( # Sets the name of the library.
              SHARED
 
              # Provides a relative path to your source file(s).
-             JNIDemo.cpp ../jni/test.c ../jni/test.cpp )
+             JNIDemo.cpp ../jni/test.c ../jni/test.cpp usage.c )
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
