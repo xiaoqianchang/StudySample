@@ -5,24 +5,6 @@
 #include "com_chang_jni_demo_JNITest.h"
 #include <stdio.h>
 
-JNIEXPORT jstring JNICALL Java_com_chang_jni_demo_JNITest_get
-        (JNIEnv *env, jobject thiz) {
-    printf("invoke get in c\n");
-    return (*env)->NewStringUTF(env, "Hello from JNI !");
-}
-
-JNIEXPORT void JNICALL Java_com_chang_jni_demo_JNITest_set
-(JNIEnv *env, jobject thiz, jstring string) {
-    printf("invoke set from c\n");
-    char* str = (char*)(*env)->GetStringUTFChars(env,string,NULL);
-    printf("%s\n", str);
-    // 测试 jni 调用 java 静态方法
-    callJavaStaticMethod(env, thiz);
-    // 测试 jni 调用 java 方法
-    callJavaMethod(env, thiz);
-    (*env)->ReleaseStringUTFChars(env, string, str);
-}
-
 // jni 调用 java 静态方法
 void callJavaStaticMethod(JNIEnv *env, jobject thiz) {
     // 1. 根据 java 类名找到类
@@ -62,4 +44,22 @@ void callJavaMethod(JNIEnv *env, jobject thiz) {
     // 4. 通过 JNIEnv 对象的 CallVoidMethod 方法来完成最终的调用过程
     jstring msg = (*env)->NewStringUTF(env, "msg send by callJavaMethod in test.c.");
     (*env)->CallVoidMethod(env, jniTest, id, msg);
+}
+
+JNIEXPORT jstring JNICALL Java_com_chang_jni_demo_JNITest_get
+        (JNIEnv *env, jobject thiz) {
+    printf("invoke get in c\n");
+    return (*env)->NewStringUTF(env, "Hello from JNI !");
+}
+
+JNIEXPORT void JNICALL Java_com_chang_jni_demo_JNITest_set
+(JNIEnv *env, jobject thiz, jstring string) {
+    printf("invoke set from c\n");
+    char* str = (char*)(*env)->GetStringUTFChars(env,string,NULL);
+    printf("%s\n", str);
+    // 测试 jni 调用 java 静态方法
+    callJavaStaticMethod(env, thiz);
+    // 测试 jni 调用 java 方法
+    callJavaMethod(env, thiz);
+    (*env)->ReleaseStringUTFChars(env, string, str);
 }
