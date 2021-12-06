@@ -27,7 +27,7 @@ public interface JnaUsageLibrary extends Library {
      * 2. 非 Android，当动态库放置于系统目录时，可省去固定路径和后缀名，如 libJNADemo；
      * 3. 非 Android，当动态库未放置于系统目录时，需要写固定路径和全名，如System.getProperty("user.dir") + "/JNADemo/libs/armeabi-v7a/libJNADemo.so"
      */
-    JnaUsageLibrary INSTANCE = Native.load(System.getProperty("user.dir") + "/JNADemo/src/main/jniLibs/armeabi-v7a/libJNADemo.so", JnaUsageLibrary.class);
+    JnaUsageLibrary INSTANCE = Native.load(JnaConstants.isAppUse ? "JNADemo" : System.getProperty("user.dir") + "/JNADemo/src/main/jniLibs/armeabi-v7a/libJNADemo.so", JnaUsageLibrary.class);
 
     /***************************** JNA 用法 start *************************************/
     /***************************** Java 调原生方法 start *******************************/

@@ -50,4 +50,8 @@ public class MainActivity extends AppCompatActivity {
     public void onNdkDemoClick(View view) {
         startActivity(new Intent(this, NdkDemoActivity.class));
     }
+
+    public void onJNADemoClick(View view) {
+        startActivity(new Intent(this, JnaDemoActivity.class));
+    }
 }
