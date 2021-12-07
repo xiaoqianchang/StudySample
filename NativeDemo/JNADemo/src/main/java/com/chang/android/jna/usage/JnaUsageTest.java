@@ -378,7 +378,7 @@ public class JnaUsageTest {
     /**
      * 获取复杂结构体
      */
-    private static void getCompany2() {
+    public static void getCompany2() {
         Company.ByReference company = null;
         try {
             company = JnaUsageLibrary.INSTANCE.getCompany2();
@@ -386,7 +386,7 @@ public class JnaUsageTest {
                 return;
             }
             System.out.println("java printf: " + company.toString());
-            if (company.userArray != null) {
+            if (company.userArray != null && company.userArrayLength > 0) {
                 User.ByReference[] users = (User.ByReference[]) company.userArray.toArray(company.userArrayLength);
                 for (User user : users) {
                     System.out.println("java printf: " + user.toString());
