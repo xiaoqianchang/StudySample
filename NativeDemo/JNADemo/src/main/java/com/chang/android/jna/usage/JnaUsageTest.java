@@ -344,14 +344,25 @@ public class JnaUsageTest {
 
     /**
      * 获取复杂结构体
+     *
+     * a. 当 C 里面Company结构体里userArrayLength为0，userArray malloc后没有memset 0？
+     * 此时java这边company.userArray不为null，当调用toArray时会报native crash如下：
+     * backtrace:
+     *     #00 pc 000000000001e8a0  /system/lib64/libc.so (strlen+16)
+     *     #01 pc 00000000000081f4  /data/app/com.chang.android.ndk.sample-NOXcQy98knt1OiRXx4-ASQ==/lib/arm64/libjnidispatch.so (Java_com_sun_jna_Native_getStringBytes+32)
+     * 如果给该段代码加上 try catch，将不会出现如上crash，在catch里面报出java.lang.ArrayIndexOutOfBoundsException: length=0; index=0警告。
+     * 原因是在调用toArray时，内部Array.newInstance(getClass(), size)返回大小为0的Object，当强转为Structure[]时报该异常。
+     * 总结：
+     * 1. c 代码里一定要对userArray进行memset 0，否则userArray里面的结构体会出现野值；如输出 java printf: Company{id=100, name='Adup', userArray=User{id=523517685760, name='T', age=1938348752}, userArrayLength=0}
+     * 2. 当调用toArray时要判断不为null并且length大于0才调用；
      */
-    private static void getCompany() {
+    public static void getCompany() {
         Company.ByReference company = null;
         try {
             company = new Company.ByReference();
             JnaUsageLibrary.INSTANCE.getCompany(company);
             System.out.println("java printf: " + company.toString());
-            if (company.userArray != null) {
+            if (company.userArray != null && company.userArrayLength > 0) {
                 User.ByReference[] users = (User.ByReference[]) company.userArray.toArray(company.userArrayLength);
                 for (User user : users) {
                     System.out.println("java printf: " + user.toString());
