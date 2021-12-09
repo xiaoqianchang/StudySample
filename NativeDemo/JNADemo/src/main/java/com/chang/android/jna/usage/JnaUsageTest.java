@@ -61,6 +61,8 @@ public class JnaUsageTest {
 
 //        getCompany2();
 
+//        getMajorCompany();
+
 //        getValue();
 
 //        asyncGetUser();
@@ -396,6 +398,22 @@ public class JnaUsageTest {
             e.printStackTrace();
         } finally {
             JnaUsageLibrary.INSTANCE.freeCompany(company);
+        }
+    }
+
+    /**
+     * 获取复杂结构体（测试内部嵌套二级指针表达数组） --- 获取不到数组数据
+     */
+    public static void getMajorCompany() {
+        MajorCompany.ByReference company = null;
+        try {
+            company = new MajorCompany.ByReference();
+            JnaUsageLibrary.INSTANCE.getMajorCompany(company);
+            System.out.println("java printf: " + company.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            JnaUsageLibrary.INSTANCE.freeMajorCompany(company);
         }
     }
 
