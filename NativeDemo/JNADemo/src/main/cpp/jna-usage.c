@@ -316,6 +316,53 @@ void freeCompany(Company *pCompany) {
     }
 }
 
+// 申明结构体嵌套（用二级指针表示一维数组）
+// 如果这里数组字段是 User userArray[100] 的话，在 java 那边该属性对应为 public User.ByValue[] userArray = new User.ByValue[100];
+// 如果这里数组字段是 User *userArray[100] 的话，在 java 那边该属性对应为 public User.ByReference[] userArray = new User.ByReference[100];
+typedef struct {
+    long id;
+    char *name;
+    int userArrayLength;
+    User **userArray;
+} MajorCompany;
+
+// 获取复杂结构体（测试内部嵌套二级指针表达数组）
+void getMajorCompany(MajorCompany *pCompany) {
+    int length = 5;
+    pCompany->id = 100;
+    pCompany->name = "Adup";
+    pCompany->userArrayLength = length;
+    User **pArray = NULL;
+    if (length > 0) {
+        pArray = malloc(sizeof(User*) * length);
+    }
+    memset(pArray, 0, sizeof(User*) * length);
+    for (int i = 0; i < length; i++) {
+        pArray[i] = malloc(sizeof(User));
+        memset(pArray[i], 0, sizeof(User));
+        pArray[i]->id = 100 + (long)i;
+        pArray[i]->name = "Nicholas Sean";
+        pArray[i]->age = 18 + i;
+    }
+    pCompany->userArray = pArray;
+
+    return ;
+}
+// 释放复杂结构体嵌套结构体内存空间
+void freeMajorCompany(MajorCompany *pCompany) {
+    if (pCompany != NULL) {
+        if (pCompany->userArray) {
+            for (int i = 0; i < pCompany->userArrayLength; i++) {
+                free(pCompany->userArray[i]);
+            }
+            free(pCompany->userArray);
+            pCompany->userArray = NULL;
+        }
+        free(pCompany);
+        pCompany = NULL;
+    }
+}
+
 /*
  * native 调 java
  */

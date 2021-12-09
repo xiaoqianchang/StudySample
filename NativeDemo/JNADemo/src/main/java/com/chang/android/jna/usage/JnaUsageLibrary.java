@@ -108,6 +108,9 @@ public interface JnaUsageLibrary extends Library {
     Company.ByReference getCompany2();
     // 5. 释放复杂结构体嵌套结构体内存空间
     void freeCompany(Company.ByReference pCompany);
+    // 传递复杂结构体（测试内部嵌套二级指针表达数组）--- 获取不到数组数据
+    void getMajorCompany(MajorCompany.ByReference pCompany);
+    void freeMajorCompany(MajorCompany.ByReference pCompany);
     /***************************** Java 调原生方法 end *******************************/
 
     /***************************** 原生方法调 Java start *******************************/
