@@ -1,15 +1,19 @@
 ## JNIDemo
 
-该 module 仅仅是实现 JNI 的开发流程，都是通过 Java 命令执行。
+该 module 主要是实现 JNI 的开发流程，都是通过 Java 命令执行。
 简单的 Java 调用 JNI 、JNI 调用 Java 然后 gcc 编译源文件为原生库（mac 电脑如果
 安装了 xcode commond line tool 会包含 clang 编译工具，内部包含 gcc），关于 Cmake 的
 配置、 JNI 调用 Java 的多种方式、ndk 编程请看 NDKDemo。
 
-### 1.1、在 Java 中申明 native 方法
+usage 包中包含 JNI 的基本用法。
+
+### 1、JNI 的开发流程
+
+#### 1.1、在 Java 中申明 native 方法
 
 见 JNITest 中定义的 native 方法。
 
-### 1.2、生成 JNI 头文件
+#### 1.2、生成 JNI 头文件
 
 ``` bash
 # 先进入源码目录
@@ -20,11 +24,11 @@ javac com/chang/jni/demo/JNITest.java
 javah com.chang.jni.demo.JNITest
 ```
 
-### 1.3、实现 JNI 方法
+#### 1.3、实现 JNI 方法
 
 见 jni 包中 test.c 和 test.cpp
 
-### 1.4、编译生成 so 库并在 java 中调用
+#### 1.4、编译生成 so 库并在 java 中调用
 
 so 库的编译可以采用 gcc 。
 
@@ -41,3 +45,40 @@ c++: gcc -shared -I /Library/Java/JavaVirtualMachines/jdk1.8.0_221.jdk/Contents/
 前面 -I 指定 jni.h 文件的位置，后面 -I 指定 jni_md.h 文件的位置。
 
 切换到主目录执行 java -Djava.library.path=jni com.chang.jni.demo.JNITest 在 mac 上有问题，可以在 JNITest 中右键点击 Run 'JNITest.main()'
+
+
+### 2、javac 介绍
+
+#### 2.1、资料
+
+- [javac编译多个不同目录下的java源文件](https://blog.csdn.net/qq_43278826/article/details/84870319)
+
+### 3、javah 介绍
+
+#### 3.1、资料
+
+- [javah用法](https://blog.csdn.net/zzhays/article/details/10514767#:~:text=javah%E5%91%BD%E4%BB%A4%E4%B8%BB,%2B%E7%AB%AF%E7%A8%8B%E5%BA%8F%E7%9A%84%E5%BC%80%E5%8F%91%E3%80%82)
+
+### 4、native 方法定义规则
+
+native 方法的写法参考如下类：
+
+- java.lang.Math
+- java.lang.Double
+- com.sun.prism.es2.GLFactory
+- com.sun.prism.es2.EGLX11GLContext
+- java.awt.Cursor
+- android.os.Trace
+- android.graphics.Bitmap
+- android.graphics.HardwareRenderer
+- android.graphics.FontFamily
+- com.sun.webkit.network.URLLoader
+- java.io.FileInputStream
+- java.io.ObjectOutputStream
+- com.sun.jna.Native
+
+大体规则如下：
+
+- class 用 final 修饰
+- 方法只在当前类内部使用（包含内部有业务封装并向外部提供 public 方法）用 private static native <return_type> n<function_name>(<params>) 修饰
+- 方法可以在外部使用用 public static native <return_type> <function_name>(<params>) 修饰，如 java.lang.Math；
