@@ -15,6 +15,10 @@
 //%E 		作用同 %e，用科学计数法格式化定点数
 //%g 		根据值的大小决定使用 %f 或者%e
 //%G 		作用同 %g,根据值的大小决定使用 %F 或者%E
+//%hd       格式化 short
+//%u        格式化 unsigned int
+//%ld       格式化 long
+//%lld      格式化 long long
 
 // int *pInt
 // 获取指针变量的地址，使用取地址运算符&，如 int *pb = &pInt;
