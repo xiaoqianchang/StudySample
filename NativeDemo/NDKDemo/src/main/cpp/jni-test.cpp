@@ -2,6 +2,12 @@
 // Created by 肖昌 on 2021/10/28.
 //
 
+/*
+ * 知识点：
+ * 1. 如果native方法为对象方法（非静态），生成的JNI函数参数为（JNIEnv *env, jobject thiz）；
+ * 如果native方法为类方法（静态），生成的JNI函数参数为（JNIEnv *env, jclass clazz）；
+ */
+
 #include <jni.h>
 #include <string>
 // 头文件位置: {sdk-path}/ndk-bundle/sysroot/usr/include/android/
