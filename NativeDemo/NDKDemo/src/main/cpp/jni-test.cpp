@@ -4,9 +4,11 @@
 
 #include <jni.h>
 #include <string>
+// 头文件位置: {sdk-path}/ndk-bundle/sysroot/usr/include/android/
 #include <android/log.h>
 
 // android 日志
+// 定义输出的TAG
 #define LOG_TAG "jni-test"
 #define LOGV(...) __android_log_print(ANDROID_LOG_VERBOSE, LOG_TAG, __VA_ARGS__)
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)

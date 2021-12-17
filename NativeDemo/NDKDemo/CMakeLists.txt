@@ -3,7 +3,7 @@
 # Sets the minimum version of CMake required to build your native library.
 # This ensures that a certain set of CMake features is available to
 # your build.
-# 指定cmake最小版本
+# 指定cmake最小版本(限定cmake支持最低版本)
 cmake_minimum_required(VERSION 3.4.1)
 
 # Declares and names the project.
@@ -11,27 +11,39 @@ cmake_minimum_required(VERSION 3.4.1)
 
 # abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "x86", "x86_64", "mips", "mips64"
 
+# 设置so输出的目录（PROJECT_SOURCE_DIR=CmakeLists.txt所在的目录（如果不存在后面的子目录会自动创建），ANDROID_ABI=build.gradle中abiFilters配置的值）
+#set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/libs/${ANDROID_ABI})
+
+# 定义搜索路径
+# 定义头文件的搜索路径
+# Specifies a path to native header files.
+include_directories( src/main/cpp/include/ )
+# 定义库文件的搜索路径（添加需要链接的库文件路径，注意这里是全路径），该用法已经被废弃
+#link_libraries( $ndk/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/aarch64-linux-android/28/ )
+# target_link_libraries 要在 add_executable 之后，link_libraries 要在 add_executable 之前
+
 # Specifies a library name, specifies whether the library is STATIC or
 # SHARED, and provides relative paths to the source code. You can
 # define multiple libraries by adding multiple add_library() commands,
 # and CMake builds them for you. When you build your app, Gradle
 # automatically packages shared libraries with your APK.
 
+# 添加一个可执行程序
 add_library( # Specifies the name of the library.
         # 注意这里的library name，下文在java（kotlin）类中需要用到
         # 库的名称
         native-lib
 
         # Sets the library as a shared library.
+        # STATIC：静态库，是目标文件的归档文件，在链接其它目标的时候使用
+        # SHARED：动态库，会被动态链接，在运行时被加载
+        # MODULE：模块库，是不会被链接到其它目标中的插件，但是可能会在运行时使用dlopen-系列的函数动态链接
         # 将库设置成共享库
         SHARED
 
         # Provides a relative path to your source file(s).
-        # 设置源码的路径
+        # 设置源码的路径（相对于当前文件），多个源码文件用空格分开
         native-lib.cpp) # 注意是路径，而不是包，不可用.区分，需要使用/ ,如 src/main/cpp/native-lib.cpp
-
-# Specifies a path to native header files.
-include_directories( src/main/cpp/include/ )
 
 # 添加 NDK API
 
@@ -46,8 +58,10 @@ find_library( # Defines the name of the path variable that stores the location o
 
         # Specifies the name of the NDK library that
         # you want CMake to locate.
+        # $ndk/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/aarch64-linux-android/28/liblog.so
         log)
 
+# 将库文件链接到可执行程序上
 # 为了让您的原生库能够调用 log 库中的函数，您需要使用 CMake 构建脚本中的 target_link_libraries() 命令来关联这些库：
 # Links your native library against one or more other native libraries.
 target_link_libraries( # Specifies the target library.
