@@ -19,6 +19,7 @@ android {
         // 安装了多个版本的 NDK，想要使用某个特定版本，如下配置
         // ndkVersion "22.1.7171670" // ndkVersion "major.minor.build" e.g.,  ndkVersion '21.3.6528147'
 
+        // 使用Cmake工具
         // This block is different from the one you use to link Gradle
         // to your CMake or ndk-build script.
         externalNativeBuild {
